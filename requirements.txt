@@ -1,3 +1,2 @@
-lxml==3.3.4
-sunburnt==0.6
-httplib2==0.8
+requests
+nltk
