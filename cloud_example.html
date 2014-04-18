@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 
 <!-- used https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html -->
+<style type="text/css">
+  g {
 
+  }
+
+</style>
 <meta charset="utf-8">
 <body>
+
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="d3.layout.cloud.js"></script>
 <script>
 var fill = d3.scale.category20();
 
-d3.csv("wordcloud.csv", function(error, data) {
-  var wordArray = [];
-  for(var i=0;i<data.length;i++){
-    var obj = data[i];
-    var word = [];
-    for(var key in obj) {
-      wordArray.push(obj[key]);
-    }
-  }
+d3.csv("wordcloud.csv", function(error, wordlist) {
+  data = wordlist.map(function(d)
+  {
+    word = d.word;
+    weight = parseFloat(d.count);
+    return {"word": word, "weight": weight};
+  });
+  
+  console.log(data);
 
 
-  d3.layout.cloud().size([300, 300])
-      .words(wordArray.map(function(d) {
-        return {text: d, size: 10 + Math.random() * 50};
+  // for(var i=0;i<data.length;i++){
+  //   var obj = data[i];
+  //   var word = [];
+  //   for(var key in obj) {
+  //     wordArray.push(obj[key]);
+  //   }
+  // }
+
+
+  d3.layout.cloud().size([400, 400])
+      .words(data.map(function(d) {
+        return {text: d.word, size: 10 + d.weight * 5};
       }))
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
       .font("Impact")
       .fontSize(function(d) { return d.size; })
       .on("end", draw)
@@ -33,10 +48,10 @@ d3.csv("wordcloud.csv", function(error, data) {
 
   function draw(words) {
     d3.select("body").append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
+        .attr("width", 450)
+        .attr("height", 450)
       .append("g")
-        .attr("transform", "translate(150,150)")
+        .attr("transform", "translate(200,200)")
       .selectAll("text")
         .data(words)
       .enter().append("text")
@@ -51,3 +66,4 @@ d3.csv("wordcloud.csv", function(error, data) {
   }
 });
 </script>
+</body>
