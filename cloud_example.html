@@ -12,9 +12,13 @@
 
 
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="d3.layout.cloud.js"></script>
+<script src="js/d3.layout.cloud.js"></script>
+<script src="js/colorbrewer.js"></script>
 <script>
-var fill = d3.scale.category20();
+// var fill = d3.scale.category20();
+var fill = d3.scale.ordinal()
+  .range(colorbrewer.Blues[10]);
+var counter = 0; //for keeping track of color change
 
 d3.csv("wordcloud.csv", function(error, wordlist) {
   data = wordlist.map(function(d)
@@ -46,6 +50,7 @@ d3.csv("wordcloud.csv", function(error, wordlist) {
       .on("end", draw)
       .start();
 
+
   function draw(words) {
     d3.select("body").append("svg")
         .attr("width", 450)
@@ -57,7 +62,10 @@ d3.csv("wordcloud.csv", function(error, wordlist) {
       .enter().append("text")
         .style("font-size", function(d) { return d.size + "px"; })
         .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
+        //loops through colors the first 10 words are the darkest blue ect...
+        .style("fill", function(d, i) { 
+          if(i%10 === 0){counter++;} 
+          return fill(counter); })
         .attr("text-anchor", "middle")
         .attr("transform", function(d) {
           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
