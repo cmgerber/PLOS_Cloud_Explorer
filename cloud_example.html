@@ -20,7 +20,7 @@ var fill = d3.scale.ordinal()
   .range(colorbrewer.Blues[10]);
 var counter = 0; //for keeping track of color change
 
-d3.csv("wordcloud.csv", function(error, wordlist) {
+d3.csv("wordcloud2.csv", function(error, wordlist) {
   data = wordlist.map(function(d)
   {
     word = d.word;
@@ -42,7 +42,7 @@ d3.csv("wordcloud.csv", function(error, wordlist) {
 
   d3.layout.cloud().size([400, 400])
       .words(data.map(function(d) {
-        return {text: d.word, size: 10 + d.weight * 5};
+        return {text: d.word, size: 10 + d.weight * 2};
       }))
       .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
       .font("Impact")
