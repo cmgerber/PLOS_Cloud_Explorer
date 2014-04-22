@@ -1,6 +1,7 @@
 import nltk
 from nltk.corpus import stopwords
 import string
+from numpy import nan
 from pandas import Series
 
 # Globally define a set of stopwords.
@@ -18,7 +19,7 @@ def wordify(abs_list, min_word_len=2):
     text = ' '.join(abs_list).strip(' \n')
 
     if text == '':
-        return np.nan
+        return nan
 
     else:
         # Remove punctuation & replace with space,
