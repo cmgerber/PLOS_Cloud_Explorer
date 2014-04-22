@@ -3,6 +3,7 @@ settings.py
 
 # IPython notebooks checkpoints
 ipython_notebooks/.ipynb_checkpoints
+.ipynb_checkpoints
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -57,4 +58,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
