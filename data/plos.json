@@ -1,0 +1,36 @@
+{ 
+  "name": "plos",
+  "children": [
+    {
+      "name": "Information technology",      
+      "children": [
+
+        {"name": "Data mining"},
+        {"name": "Data processing"},
+        {"name": "Data reduction"}, 
+        {
+          "name":  "Databases",
+          "children": [
+            {"name": "Relational databases"}
+          ]
+        },
+      
+        {"name": "Information architecture"},  
+        {"name": "Information processing"},
+        {"name": "Information storage and retrieval"},
+        {
+          "name": "Natural language processing",
+          "children": [
+            {
+              "name": "Named entity recognition", 
+              "children": [
+                {"name": "Entity disambiguation"}
+              ]
+            }
+          ]  
+        },
+        {"name": "Text mining"} 
+      ]
+    }
+  ]
+}

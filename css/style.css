@@ -1,0 +1,95 @@
+/* reset */
+
+html, body, address, blockquote, del, div, h1, h2, h3, h4, h5, h6, hr, ins, noscript, p, pre, dl, dt, dd, li, ol, ul, table, caption, colgroup, col, thead, tfoot, tbody, tr, td, th, form, button, fieldset, legend, label, select, optgroup, option, textarea, a, bdo, br, img, map, area, object, param, q, script, span, sub, sup, abbr, acronym, cite, code, del, dfn, em, ins, kbd, samp, strong, var, b, big, i, small, tt{border:0;font-family:inherit;font-size:100%;font-style:inherit;font-weight:inherit;margin:0;outline:0;padding:0;vertical-align:baseline;}
+ol, ul{list-style:none;}
+th{text-align:left;}
+table{border-collapse:collapse;}
+
+
+
+/* global */
+
+body 											      {background:#f0f0f0;}
+a:link,
+a:visited										    {}
+a:hover,
+a:visited:hover									{}
+
+table td										    {}
+
+h1												      {font-size:2em; font-weight:bold; margin:0 0 20px 0;}
+h2												      {}
+h3												      {}
+h4												      {}
+h5												      {}
+h6												      {}
+
+p												        {margin: 40px auto; position: relative; font-size:1em; font-weight:normal; margin:20 20 16px 0;}
+span												    {}
+hr													    {}
+label												    {}
+input[type=text]								{}
+input[type=text]:focus				  {}
+input[type=submit]							{}
+textarea											  {}
+
+::selection                     {}
+::-moz-selection 								{}
+
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+
+/* container */
+
+main												    {margin:40px auto; position:relative; width:800px;}
+
+#viz												    {background:#fff;}
+
+#viz text											  {font-size:.75em; font-weight:bold;}
+
+
+/* header */
+
+#header                         {}
+
+
+
+/* responsive design css rules */
+
+@media screen and (max-width:480px) {
+body 												    {}
+}
+
+@media screen and (min-width:480px) and (max-width:800px) {
+body                            {}
+}
+
+@media screen and (min-width:800px) and (max-width:1024px) {
+body                            {}
+}
+
+
+
+/* misc */
+
+strong											    {font-weight:bold;}
+em                              {font-style:italic;}
+.cb                             {clear:both;}          
