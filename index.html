@@ -2,18 +2,36 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+        <title>PLOS Cloud Explorer</title>
+        <link rel="icon" type="image/png" href="img/favicon.png">
 		<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="js/d3.min.js"></script>
+        <script src="http://dimplejs.org/dist/dimple.v1.1.5.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 	</head>
 <body>
-	<div id='container'></div>
+    <div id="wrapper">
+
+        <div id ="header">
+            <h2 id="main-title">PLOS Cloud Explorer</h2>
+        </div>
+        
+        <div id='tree'></div>
+
+        <div id="dashboard">
+        dashboard
+            <div id="chartContainer">
+            </div>
+        </div>
+
+    </div>
+	<!-- <div id='container'></div>
 
     <div id="dashboard">
     dashboard
         <div id="chartContainer">
         </div>
-    </div>
+    </div> -->
 
 </body>
 	<script src="/js/script.js"></script>
