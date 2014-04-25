@@ -16,7 +16,7 @@ def wordify(abs_list, min_word_len=2):
     '''
 
     # The abstract field is a list. Make it a string.
-    text = ' '.join(abs_list).strip(' \n')
+    text = ' '.join(abs_list).strip(' \n\t')
 
     if text == '':
         return nan
