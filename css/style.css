@@ -36,6 +36,15 @@ textarea											  {}
 ::selection                     {}
 ::-moz-selection 								{}
 
+/* header */
+#header {
+    color: rgb(255,153,0);
+    text-align: left;
+    font-weight: 700;
+    font-style: italic;
+}
+
+/* collapsable tree */
 .node {
   cursor: pointer;
 }
@@ -54,6 +63,30 @@ textarea											  {}
   fill: none;
   stroke: #ccc;
   stroke-width: 1.5px;
+}
+
+/* view finder */
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
 }
 
 

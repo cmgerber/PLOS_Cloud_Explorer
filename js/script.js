@@ -1,4 +1,66 @@
-$(document).ready(function() {
+// $(document).ready(function() {
+
+  // setting css for elements
+var windowHeight = window.innerHeight - 8;
+var windowWidth = window.innerWidth - 8;
+
+var borderWidth = 1;
+
+var headerHeight = 0.07 * windowHeight;
+if (headerHeight > 50) { headerHeight = 50; }
+
+var headerFontSize = 0.05 * windowHeight;
+if (headerFontSize > 36) { headerFontSize = 36; }
+
+var headerFontSpacing = windowWidth * 0.0025;
+if (headerFontSpacing > 3) { headerFontSpacing = 3; }
+
+var topMargin = 0.02 * windowHeight;
+if (topMargin > 10) { topMargin = 10; }
+
+var divPadding = 0.01 * windowHeight;
+if (divPadding > 8) { divPadding = 8; }
+
+
+var rightWidth = 0.3 * windowWidth - (2 * divPadding);
+if (rightWidth > 400 - (2 * divPadding)) { rightWidth = 400 - (2 * divPadding); }
+
+var centerWidth = windowWidth - rightWidth - (4 * divPadding) - (4 * borderWidth);
+
+var mainHeight = windowHeight - headerHeight - topMargin;
+var dashboardHeight = mainHeight - (2 * divPadding) - (2 * borderWidth);
+var optionsHeight = (mainHeight * 0.4) - (2 * divPadding) - (2 * borderWidth);
+var navigatorHeight = mainHeight - optionsHeight - topMargin - (4 * divPadding) - (4 * borderWidth);
+
+d3.select("#wrapper")
+    .style("height", windowHeight + "px")
+    .style("width", windowWidth + "px")
+    .style("margin", "4px");
+d3.select("#header")
+    .style("font-size", headerFontSize + "px")
+    .style("letter-spacing", headerFontSpacing + "px")
+    .style("width", "96%")
+    .style("height", headerHeight + "px")
+    .style("vertical-align","middle")
+    .style("background-color", "rgb(68,68,68)")
+    .style("padding-left", "1%")
+    .style("padding-right", "3%");
+d3.select("#tree")
+    .style("float", "left")
+    .style("margin-top", topMargin + "px")
+    .style("width", centerWidth + "px")
+    .style("height", mainHeight + "px");
+d3.select("#dashboard")
+    .style("float", "left")
+    .style("width", rightWidth + "px")
+    .style("height", dashboardHeight + "px")
+    .style("padding", divPadding + "px")
+    .style("margin-top", topMargin + "px")
+    .style("border", borderWidth + "px solid")
+    .style("border-color", "rgb(229,150,54)")
+    .style("background-color", "#fff");
+
+//collapsing tree
 
   var margin = {top: 20, right: 120, bottom: 20, left: 120},
       width = 960 - margin.right - margin.left,
@@ -14,11 +76,58 @@ $(document).ready(function() {
   var diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.y, d.x]; });
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select("#tree").append("svg")
       .attr("width", width + margin.right + margin.left)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//View Finder vars
+//view finder based on: http://bl.ocks.org/mbostock/1667367
+
+var margin = {top: 0, right: 0, bottom: 0, left: 0},
+    margin2 = {top: 0, right: 0, bottom: 20, left: 0},
+    width = ((document.getElementById("options").offsetWidth) * 0.8) - margin.left - margin.right, //200 - margin.left - margin.right,
+    height = ((document.getElementById("options").offsetWidth) * 0.25) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
+    height2 = ((document.getElementById("options").offsetWidth) * 0.25) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
+
+var parseDate = d3.time.format("%Y").parse;
+
+var x = d3.time.scale().range([0, width]),
+    x2 = d3.time.scale().range([0, width]),
+    y = d3.scale.linear().range([height, 0]),
+    y2 = d3.scale.linear().range([height2, 0]);
+
+var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
+    yAxis = d3.svg.axis().scale(y).orient("left");
+
+var brush = d3.svg.brush()
+    .x(x2)
+    .on("brush", brushed);
+
+var area2 = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x2(d.years); })
+    .y0(height2)
+    .y1(function(d) { return y2(d.studies); });
+
+var svg = d3.select("#options").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", width)
+    .attr("height", height);
+
+var context = svg.append("g")
+    .attr("class", "context")
+    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+
+//load data for collapsing tree
 
   d3.json("/data/plos.json", function(error, flare) {
     console.log(flare);
@@ -138,4 +247,10 @@ $(document).ready(function() {
     }
     update(d);
   }
-});  
+
+  // View Finder
+
+
+
+
+// });  
