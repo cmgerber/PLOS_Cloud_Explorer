@@ -93,8 +93,8 @@ var data,
 var margin = {top: 0, right: 10, bottom: 0, left: 10},
     margin2 = {top: 0, right: 0, bottom: 20, left: 0},
     width = ((document.getElementById("dashboard").offsetWidth) * 0.85) - margin.left - margin.right, //200 - margin.left - margin.right,
-    height = ((document.getElementById("dashboard").offsetWidth) * 0.25) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
-    height2 = ((document.getElementById("dashboard").offsetWidth) * 0.25) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
+    height = ((document.getElementById("dashboard").offsetHeight) * 0.25) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
+    height2 = ((document.getElementById("dashboard").offsetHeight) * 0.25) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
 
 var parseDate = d3.time.format("%Y").parse;
 
@@ -131,6 +131,13 @@ var context = viewsvg.append("g")
     .attr("width", width)
     .attr("class", "context")
     //.attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+//vars for word cloud
+
+//controls color of words
+var fill = d3.scale.ordinal()
+  .range(colorbrewer.Blues[10]);
+
 
 
 //load data for collapsing tree
@@ -270,10 +277,14 @@ function update_data(data) {
       subject_dict = {};
   // time
   for (var key in data) {
+
+    var subj_leaf = data[key]['subj_leaf'];
+
     if ( !(data[key]['publication_date'] in time_dict) ) {
-      time_dict[data[key]['publication_date']] = {articles: 0};
+      time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: []};
     }
     time_dict[data[key]['publication_date']].articles += 1;
+    time_dict[data[key]['publication_date']].subj_leaf.pushArray(subj_leaf);
   }
 
   console.log('time dict', time_dict);
@@ -288,17 +299,25 @@ function update_data(data) {
       time_data.push({
           name: objkeys[c],
           articles: time_dict[objkeys[c]].articles,
+          subj_leaf: time_dict[objkeys[c]].subj_leaf,
       });
     
     }
 
+console.log('time check', time_data);
 
 makeviewfinder();
 histo = makehisto();
+cloud = makewordcloud();
 
-return histo;
+return histo, cloud;
 
 }
+
+//adds ability to easily add array items to another array.
+Array.prototype.pushArray = function(arr) {
+    this.push.apply(this, arr);
+};
 
 //funtion for updating graphs from view finder
 function update_graphs(time_view, date_range, histo) {
@@ -382,7 +401,6 @@ function makehisto() {
 
     var maxY = d3.max(time_new.map(function(item) {return item.articles;}));
 
-    console.log(time_new);
 
     var histosvg = dimple.newSvg("#chartHisto", '80%', '33%');
 
@@ -395,6 +413,72 @@ function makehisto() {
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
       return myChart;
+}
+
+//function for making word cloud
+function makewordcloud() {
+
+  var word_count = 0,
+  //for keeping track of color change
+      counter = 0; 
+
+  var cloud_dict = {};
+  time_data.forEach(function(d) {
+    d.subj_leaf.forEach(function(c){
+      if ( !(c in cloud_dict) ) {
+        cloud_dict[c] = {count: 0};
+      }
+      cloud_dict[c].count += 1;
+    });
+  });
+
+  var sortable = [];
+  for (var word in cloud_dict)
+        sortable.push([word, cloud_dict[word].count]);
+  sortable.sort(function(a, b) {return b[1] - a[1]});
+
+  var word_slice = sortable.slice(0,40);
+  console.log('cloud', word_slice);
+
+  d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
+      // .words(Object.keys(cloud_dict).map(function(key) {
+      //   if (word_count <= 40) {
+      //     word_count++;
+      //     return {text: key, size: cloud_dict[key].count };
+      //   }
+      // }))
+      .words(word_slice.map(function(d) {
+        return {text: d[0], size: d[1] / 4};
+      }))
+      .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+
+
+  function draw(words) {
+    d3.select("#wordcloud").append("svg")
+        .attr("width", ((document.getElementById("dashboard").offsetWidth) * 0.85))
+        .attr("height", ((document.getElementById("dashboard").offsetHeight) * 0.35))
+      .append("g")
+        .attr("transform", "translate(170,80)")
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        //loops through colors the first 10 words are the darkest blue ect...
+        .style("fill", function(d, i) { 
+          if(i%5 === 0){counter++;} 
+          return fill(counter); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+  }
+
 }
 
 //enables view finder brushing
