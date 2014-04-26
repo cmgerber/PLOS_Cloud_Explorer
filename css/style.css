@@ -65,10 +65,24 @@ textarea											  {}
   stroke-width: 1.5px;
 }
 
+/* Dashboard */
+
+/* Histogram */
+
+#chartContainer svg {
+  display: block;
+  margin: auto;
+}
+
 /* view finder */
 
 svg {
   font: 10px sans-serif;
+}
+
+#chartFinder svg {
+  display: block;
+  margin: auto;
 }
 
 .area {

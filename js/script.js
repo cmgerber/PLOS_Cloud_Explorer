@@ -90,9 +90,9 @@ var data,
 //View Finder vars
 //view finder based on: http://bl.ocks.org/mbostock/1667367
 
-var margin = {top: 0, right: 0, bottom: 0, left: 0},
+var margin = {top: 0, right: 10, bottom: 0, left: 10},
     margin2 = {top: 0, right: 0, bottom: 20, left: 0},
-    width = ((document.getElementById("dashboard").offsetWidth) * 0.8) - margin.left - margin.right, //200 - margin.left - margin.right,
+    width = ((document.getElementById("dashboard").offsetWidth) * 0.85) - margin.left - margin.right, //200 - margin.left - margin.right,
     height = ((document.getElementById("dashboard").offsetWidth) * 0.25) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
     height2 = ((document.getElementById("dashboard").offsetWidth) * 0.25) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
 
@@ -117,7 +117,7 @@ var area2 = d3.svg.area()
     .y0(height2)
     .y1(function(d) { return y2(d.articles); });
 
-var viewsvg = d3.select("#dashboard").append("svg")
+var viewsvg = d3.select("#chartFinder").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
@@ -128,8 +128,9 @@ viewsvg.append("defs").append("clipPath")
     .attr("height", height);
 
 var context = viewsvg.append("g")
+    .attr("width", width)
     .attr("class", "context")
-    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+    //.attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
 
 //load data for collapsing tree
@@ -358,6 +359,7 @@ function makeviewfinder() {
 
     context.append("g")
       .attr("class", "x axis")
+      .attr("width", width)
       .attr("transform", "translate(0," + height2 + ")")
       .call(xAxis2);
 
@@ -378,17 +380,20 @@ function makehisto() {
         time_new.push({"years":parseInt(d.name), "articles": d.articles});
     });
 
-    console.log('histo', time_new);
+    var maxY = d3.max(time_new.map(function(item) {return item.articles;}));
 
-    var histosvg = dimple.newSvg("#chartContainer", '80%', '33%');
+    console.log(time_new);
+
+    var histosvg = dimple.newSvg("#chartHisto", '80%', '33%');
 
       var myChart = new dimple.chart(histosvg, time_new);
       myChart.setBounds('20%', '30%', '75%', '30%');
-      myChart.addCategoryAxis("x", "years");
-      myChart.addMeasureAxis("y", "articles");
-      myChart.addSeries("Channel", dimple.plot.bar);
+      var x = myChart.addCategoryAxis("x", "years");
+      var y = myChart.addMeasureAxis("y", "articles");
+      y.overrideMax = maxY;
+      myChart.addSeries("Articles", dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
-      myChart.draw();
+      myChart.draw(1500);
       return myChart;
 }
 
