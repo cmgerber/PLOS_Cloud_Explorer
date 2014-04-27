@@ -310,7 +310,7 @@ makeviewfinder();
 histo = makehisto();
 cloud = makewordcloud();
 
-return histo, cloud;
+return histo;
 
 }
 
@@ -322,19 +322,56 @@ Array.prototype.pushArray = function(arr) {
 //funtion for updating graphs from view finder
 function update_graphs(time_view, date_range, histo) {
 
-  // clearBox('chartContainer');
-
   var new_date = [];
 
-  time_view.forEach(function(d) {
-    temp = parseInt(String(d["years"]).slice(11,15));
-    console.log('in', temp);
+  // time_view.forEach(function(d) {
+  //   temp = parseInt(String(d["years"]).slice(11,15));
+  //   console.log('in', temp);
+  //   if (temp >= date_range[0] && temp <= date_range[1]) {   //date_range.indexOf(temp) > -1
+  //     new_date.push({"years":temp, "articles": d.articles, "subj_leaf": d.subj_leaf});
+  //   }
+  // });
+  time_data.forEach(function(d) {
+    temp = parseInt(d.name);
     if (temp >= date_range[0] && temp <= date_range[1]) {   //date_range.indexOf(temp) > -1
-      new_date.push({"years":temp, "articles": d.articles});
+      new_date.push({"years":temp, "articles": d.articles, "subj_leaf": d.subj_leaf});
     }
   });
 
+  //word cloud draw
+  clearBox('wordcloud');
   console.log(new_date);
+  var new_cloud_dict = {};
+  new_date.forEach(function(d) {
+    d.subj_leaf.forEach(function(c){
+      if ( !(c in new_cloud_dict) ) {
+        new_cloud_dict[c] = {count: 0};
+      }
+      new_cloud_dict[c].count += 1;
+    });
+  });
+
+  var sortable = [];
+  for (var word in new_cloud_dict)
+        sortable.push([word, new_cloud_dict[word].count]);
+  sortable.sort(function(a, b) {return b[1] - a[1]});
+
+  var word_slice = sortable.slice(0,40);
+
+  create_words(word_slice);
+
+
+  //histogram draw
+
+  time_view = [];
+  new_date.forEach(function(d) {
+          time_view.push({"years":d.name, "articles": d.articles});
+  });
+
+
+  time_view.forEach(function(d) {
+      d.years = parseDate(String(d.years));
+    });
 
   histo.data = new_date;
   histo.draw(1000);
@@ -412,15 +449,15 @@ function makehisto() {
       myChart.addSeries("Articles", dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
+
+      // Invoke the cleaning algorithm 
+      cleanAxis(y, 2);
+
       return myChart;
 }
 
 //function for making word cloud
 function makewordcloud() {
-
-  var word_count = 0,
-  //for keeping track of color change
-      counter = 0; 
 
   var cloud_dict = {};
   time_data.forEach(function(d) {
@@ -440,53 +477,88 @@ function makewordcloud() {
   var word_slice = sortable.slice(0,40);
   console.log('cloud', word_slice);
 
+  create_words(word_slice);
+}
+
+function create_words(word_slice) {
   d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
-      // .words(Object.keys(cloud_dict).map(function(key) {
-      //   if (word_count <= 40) {
-      //     word_count++;
-      //     return {text: key, size: cloud_dict[key].count };
-      //   }
-      // }))
-      .words(word_slice.map(function(d) {
-        return {text: d[0], size: d[1] / 4};
-      }))
-      .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
-      .font("Impact")
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
-
-
-  function draw(words) {
-    d3.select("#wordcloud").append("svg")
-        .attr("width", ((document.getElementById("dashboard").offsetWidth) * 0.85))
-        .attr("height", ((document.getElementById("dashboard").offsetHeight) * 0.35))
-      .append("g")
-        .attr("transform", "translate(170,80)")
-      .selectAll("text")
-        .data(words)
-      .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-        .style("font-family", "Impact")
-        //loops through colors the first 10 words are the darkest blue ect...
-        .style("fill", function(d, i) { 
-          if(i%5 === 0){counter++;} 
-          return fill(counter); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.text; });
+    .words(word_slice.map(function(d) {
+      return {text: d[0], size: d[1] / 4};
+    }))
+    .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
+    .font("Impact")
+    .fontSize(function(d) { return d.size; })
+    .on("end", draw)
+    .start();
   }
 
+
+function draw(words) {
+  //for keeping track of color change
+  var counter = 0;
+
+  d3.select("#wordcloud").append("svg")
+      .attr("width", ((document.getElementById("dashboard").offsetWidth) * 0.85))
+      .attr("height", ((document.getElementById("dashboard").offsetHeight) * 0.35))
+    .append("g")
+      .attr("transform", "translate(170,80)")
+    .selectAll("text")
+      .data(words)
+    .enter().append("text")
+      .style("font-size", function(d) { return d.size + "px"; })
+      .style("font-family", "Impact")
+      //loops through colors the first 10 words are the darkest blue ect...
+      .style("fill", function(d, i) { 
+        if(i%5 === 0){counter++;} 
+        return fill(counter); })
+      .attr("text-anchor", "middle")
+      .attr("transform", function(d) {
+        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+      })
+      .text(function(d) { return d.text; });
 }
+
 
 //enables view finder brushing
 function brushed() {
   x.domain(brush.empty() ? x2.domain() : brush.extent());
   var date_range = [parseInt(String(brush.extent()[0]).slice(11,15)),parseInt(String(brush.extent()[1]).slice(11,15))];
   console.log(date_range);
-  update_graphs(time_view, date_range, histo);
+  update_graphs(time_view, date_range, histo, cloud);
+}
+
+// function for cleaning up y axis
+// from: http://stackoverflow.com/questions/23305230/how-do-you-reduce-the-number-of-y-axis-ticks-in-dimple-js
+// Pass in an axis object and an interval.
+ var cleanAxis = function (axis, oneInEvery) {
+     // This should have been called after draw, otherwise do nothing
+     if (axis.shapes.length > 0) {
+         // Leave the first label
+         var del = false;
+         // If there is an interval set
+         if (oneInEvery > 1) {
+             // Operate on all the axis text
+             axis.shapes.selectAll("text")
+             .each(function (d) {
+                 // Remove all but the nth label
+                 if (del % oneInEvery !== 0) {
+                     this.remove();
+                     // Find the corresponding tick line and remove
+                     axis.shapes.selectAll("line").each(function (d2) {
+                         if (d === d2) {
+                             this.remove();
+                         }
+                     });
+                 }
+                 del += 1;
+             });
+         }
+     }
+ };
+
+// use to clear divs for drawing of new graph 
+function clearBox(elementID) {
+  document.getElementById(elementID).innerHTML = "";
 }
 
 
