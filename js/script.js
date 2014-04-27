@@ -93,8 +93,8 @@ var data,
 var margin = {top: 0, right: 10, bottom: 0, left: 10},
     margin2 = {top: 0, right: 0, bottom: 20, left: 0},
     width = ((document.getElementById("dashboard").offsetWidth) * 0.85) - margin.left - margin.right, //200 - margin.left - margin.right,
-    height = ((document.getElementById("dashboard").offsetHeight) * 0.25) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
-    height2 = ((document.getElementById("dashboard").offsetHeight) * 0.25) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
+    height = ((document.getElementById("dashboard").offsetHeight) * 0.10) - margin.top - margin.bottom, //100 - margin.top - margin.bottom,
+    height2 = ((document.getElementById("dashboard").offsetHeight) * 0.10) - margin2.top - margin2.bottom; //100 - margin2.top - margin2.bottom;
 
 var parseDate = d3.time.format("%Y").parse;
 
@@ -483,7 +483,12 @@ function makewordcloud() {
 function create_words(word_slice) {
   d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
     .words(word_slice.map(function(d) {
+      if (d[1]>5) {
       return {text: d[0], size: d[1] / 4};
+    }
+    else {
+      return {text: d[0], size: d[1]*2};
+    }
     }))
     .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
     .font("Impact")
