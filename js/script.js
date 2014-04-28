@@ -109,7 +109,7 @@ var xAxis = d3.svg.axis().scale(x).orient("bottom"),
 
 var brush = d3.svg.brush()
     .x(x2)
-    .on("brush", brushed);
+    .on("brushend", brushed);
 
 var area2 = d3.svg.area()
     .interpolate("monotone")
@@ -279,12 +279,19 @@ function update_data(data) {
   for (var key in data) {
 
     var subj_leaf = data[key]['subj_leaf'];
+    var top = data[key]['subj_top'];
 
     if ( !(data[key]['publication_date'] in time_dict) ) {
-      time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: []};
+      time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: [], subj_top: {}};
     }
     time_dict[data[key]['publication_date']].articles += 1;
     time_dict[data[key]['publication_date']].subj_leaf.pushArray(subj_leaf);
+    for (var i=0; i<top.length, i++;) {
+      if ( !(top[i] in time_dict[data[key]['publication_date']].subj_top) ) {
+        time_dict[data[key]['publication_date']].subj_top = {top:0};
+      }
+      time_dict[data[key]['publication_date']].subj_top[top] +=1;
+    }
   }
 
   console.log('time dict', time_dict);
