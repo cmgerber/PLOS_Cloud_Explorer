@@ -62,9 +62,9 @@ d3.select("#dashboard")
 
 //collapsing tree
 
-  var margin = {top: 20, right: 120, bottom: 20, left: 120},
-      width = 960 - margin.right - margin.left,
-      height = 800 - margin.top - margin.bottom;
+  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+      width = ((document.getElementById("tree").offsetWidth) * 1) - margin.right - margin.left,
+      height = ((document.getElementById("tree").offsetHeight) * 0.90) - margin.top - margin.bottom;
       
   var i = 0,
       duration = 750,
@@ -331,13 +331,7 @@ function update_graphs(time_view, date_range, histo) {
 
   var new_date = [];
 
-  // time_view.forEach(function(d) {
-  //   temp = parseInt(String(d["years"]).slice(11,15));
-  //   console.log('in', temp);
-  //   if (temp >= date_range[0] && temp <= date_range[1]) {   //date_range.indexOf(temp) > -1
-  //     new_date.push({"years":temp, "articles": d.articles, "subj_leaf": d.subj_leaf});
-  //   }
-  // });
+
   time_data.forEach(function(d) {
     temp = parseInt(d.name);
     if (temp >= date_range[0] && temp <= date_range[1]) {   //date_range.indexOf(temp) > -1
@@ -449,7 +443,7 @@ function makehisto() {
     var histosvg = dimple.newSvg("#chartHisto", '80%', '33%');
 
       var myChart = new dimple.chart(histosvg, time_new);
-      myChart.setBounds('20%', '30%', '75%', '30%');
+      myChart.setBounds('20%', '30%', '75%', '40%');
       var x = myChart.addCategoryAxis("x", "years");
       var y = myChart.addMeasureAxis("y", "articles");
       y.overrideMax = maxY;
@@ -459,6 +453,14 @@ function makehisto() {
 
       // Invoke the cleaning algorithm 
       cleanAxis(y, 2);
+
+      histosvg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.07))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "underline")  
+        .text("Num Articles per Year");
 
       return myChart;
 }
@@ -482,7 +484,6 @@ function makewordcloud() {
   sortable.sort(function(a, b) {return b[1] - a[1]});
 
   var word_slice = sortable.slice(0,40);
-  console.log('cloud', word_slice);
 
   create_words(word_slice);
 }
@@ -507,13 +508,14 @@ function create_words(word_slice) {
 
 function draw(words) {
   //for keeping track of color change
-  var counter = 0;
-
+  var counter = 0,
+      w = ((document.getElementById("dashboard").offsetWidth) * 0.85),
+      h = ((document.getElementById("dashboard").offsetHeight) * 0.35);
   d3.select("#wordcloud").append("svg")
-      .attr("width", ((document.getElementById("dashboard").offsetWidth) * 0.85))
-      .attr("height", ((document.getElementById("dashboard").offsetHeight) * 0.35))
+      .attr("width", w)
+      .attr("height", h)
     .append("g")
-      .attr("transform", "translate(170,80)")
+      .attr("transform", "translate(170," + (h * 0.5) + ")") //170,100
     .selectAll("text")
       .data(words)
     .enter().append("text")
