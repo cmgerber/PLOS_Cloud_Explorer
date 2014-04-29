@@ -89,6 +89,7 @@ var s,
 
 //global data vars
 var data,
+    maketopbar_y,
     time_data = [],
     subject_data = [];
 
@@ -331,14 +332,22 @@ Array.prototype.pushArray = function(arr) {
 //funtion for updating graphs from view finder
 function update_graphs(time_view, date_range, histo) {
 
-  var new_date = [];
-
+  var new_date = [],
+      new_top_dict = {};
 
   time_data.forEach(function(d) {
     temp = parseInt(d.name);
     if (temp >= date_range[0] && temp <= date_range[1]) {   //date_range.indexOf(temp) > -1
-      new_date.push({"years":temp, "articles": d.articles, "subj_leaf": d.subj_leaf});
+      new_date.push({"years":temp, "articles": d.articles, "subj_leaf": d.subj_leaf, });
+
+      for (var key in d.subj_top) {
+        if ( !(key in new_top_dict) ) {
+        new_top_dict[key] = 0;
+        }
+        new_top_dict[key]+=d.subj_top[key];
+      }
     }
+    
   });
 
   //word cloud draw
@@ -386,6 +395,18 @@ function update_graphs(time_view, date_range, histo) {
 
   histo.data = new_date;
   histo.draw(1000);
+
+  //top subject graph draw
+  console.log('new dict', new_top_dict);
+  new_top = [];
+  for (key in new_top_dict) {
+      new_top.push({"subject": key, "count": new_top_dict[key]});
+  }
+  console.log('new top', new_top);
+  top_level_bar.data = new_top;
+  top_level_bar.draw(1000);
+  // Invoke the cleaning algorithm 
+  cleanAxis(maketopbar_y, 2);
 
 }
 
@@ -478,7 +499,7 @@ function maketopbar() {
     top_dict = {};
     time_data.forEach(function(d) {
 
-      for (key in d.subj_top) {
+      for (var key in d.subj_top) {
         if ( !(key in top_dict) ) {
         top_dict[key] = 0;
         }
@@ -488,10 +509,11 @@ function maketopbar() {
     console.log('top dict', top_dict);
 
     top_new = [];
-    for (key in top_dict) {
+    for (var key in top_dict) {
         top_new.push({"subject": key, "count": top_dict[key]});
     }
 
+    // var maxY = d3.max(top_new.map(function(item) {return item.count;}));
 
 
     var histosvg = dimple.newSvg("#chartTop", '80%', '25%');
@@ -499,12 +521,13 @@ function maketopbar() {
       var myChart = new dimple.chart(histosvg, top_new);
       myChart.setBounds('20%', '30%', '75%', '40%');
       var x = myChart.addCategoryAxis("x", "subject");
-      var y = myChart.addMeasureAxis("y", "count");
+      maketopbar_y = myChart.addMeasureAxis("y", "count");
+      // y.overrideMax = maxY;
       s = myChart.addSeries(null, dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
-      cleanAxis(y, 3);
+      cleanAxis(maketopbar_y, 3);
 
       histosvg.append("text")
         .attr("x", (width / 2))             
@@ -602,6 +625,7 @@ function brushed() {
          var del = false;
          // If there is an interval set
          if (oneInEvery > 1) {
+            if (axis.shapes.selectAll("text")[0].length > 4) {
              // Operate on all the axis text
              axis.shapes.selectAll("text")
              .each(function (d) {
@@ -617,6 +641,7 @@ function brushed() {
                  }
                  del += 1;
              });
+           }
          }
      }
  };
