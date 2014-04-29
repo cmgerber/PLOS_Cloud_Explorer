@@ -60,6 +60,11 @@ d3.select("#dashboard")
     .style("border-color", "rgb(229,150,54)")
     .style("background-color", "#fff");
 
+//bar charts
+var s,
+    histo,
+    top_level_bar;
+
 //collapsing tree
 
   var margin = {top: 20, right: 50, bottom: 20, left: 50},
@@ -143,7 +148,6 @@ var fill = d3.scale.ordinal()
 //load data for collapsing tree
 
   d3.json("/data/plos.json", function(error, flare) {
-    console.log('flare', flare);
     root = flare;
     root.x0 = height / 2;
     root.y0 = 0;
@@ -286,19 +290,18 @@ function update_data(data) {
     }
     time_dict[data[key]['publication_date']].articles += 1;
     time_dict[data[key]['publication_date']].subj_leaf.pushArray(subj_leaf);
-    for (var i=0; i<top.length, i++;) {
-      if ( !(top[i] in time_dict[data[key]['publication_date']].subj_top) ) {
-        time_dict[data[key]['publication_date']].subj_top = {top:0};
+    for (var i=0; i<top.length; i++) {
+      var temp = top[i];
+      if ( !(temp in time_dict[data[key]['publication_date']].subj_top) ) {
+        time_dict[data[key]['publication_date']].subj_top[temp] = 0;
       }
-      time_dict[data[key]['publication_date']].subj_top[top] +=1;
+      time_dict[data[key]['publication_date']].subj_top[temp]+=1;
     }
   }
-
-  console.log('time dict', time_dict);
+  console.log(time_dict);
 
   //turn dicts into list of dicts
   var objkeys = Object.keys(time_dict);
-  console.log('obj', objkeys);
   while(time_data.length > 0) {
       time_data.pop();
   };
@@ -307,17 +310,16 @@ function update_data(data) {
           name: objkeys[c],
           articles: time_dict[objkeys[c]].articles,
           subj_leaf: time_dict[objkeys[c]].subj_leaf,
+          subj_top: time_dict[objkeys[c]].subj_top,
       });
     
     }
 
-console.log('time check', time_data);
 
 makeviewfinder();
 histo = makehisto();
 cloud = makewordcloud();
-
-return histo;
+top_level_bar = maketopbar();
 
 }
 
@@ -341,7 +343,6 @@ function update_graphs(time_view, date_range, histo) {
 
   //word cloud draw
   clearBox('wordcloud');
-  console.log(new_date);
   var new_cloud_dict = {};
   new_date.forEach(function(d) {
     d.subj_leaf.forEach(function(c){
@@ -374,6 +375,15 @@ function update_graphs(time_view, date_range, histo) {
       d.years = parseDate(String(d.years));
     });
 
+  // working on getting rid of rendering of removed bars
+  // histo.data.forEach(function (d) { d.Value = 0; });
+  // histo.draw(200);
+  // s.afterDraw = function () {
+  //   histo.data = new_date;
+  //   s.afterDraw = null;
+  //   histo.draw(1000);
+  // };
+
   histo.data = new_date;
   histo.draw(1000);
 
@@ -393,7 +403,6 @@ function makeviewfinder() {
         d.years = parseDate(String(d.years));
       });
 
-    console.log("data",time_data);
 
     var xvals = [];
     var yvals = [];
@@ -402,7 +411,6 @@ function makeviewfinder() {
         yvals.push(d.articles);
     });
 
-    console.log(time_view);
 
     x.domain(d3.extent(xvals));
     y.domain([0, d3.max(yvals)]);
@@ -440,27 +448,71 @@ function makehisto() {
     var maxY = d3.max(time_new.map(function(item) {return item.articles;}));
 
 
-    var histosvg = dimple.newSvg("#chartHisto", '80%', '33%');
+    var histosvg = dimple.newSvg("#chartHisto", '80%', '25%');
 
       var myChart = new dimple.chart(histosvg, time_new);
       myChart.setBounds('20%', '30%', '75%', '40%');
       var x = myChart.addCategoryAxis("x", "years");
       var y = myChart.addMeasureAxis("y", "articles");
       y.overrideMax = maxY;
-      myChart.addSeries("Articles", dimple.plot.bar);
+      s = myChart.addSeries(null, dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
-
       // Invoke the cleaning algorithm 
       cleanAxis(y, 2);
 
       histosvg.append("text")
         .attr("x", (width / 2))             
-        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.07))
+        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.05))
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
         .style("text-decoration", "underline")  
         .text("Num Articles per Year");
+
+      return myChart;
+}
+
+// makes a bar graph of the top level subject areas and counts.
+function maketopbar() {
+
+    top_dict = {};
+    time_data.forEach(function(d) {
+
+      for (key in d.subj_top) {
+        if ( !(key in top_dict) ) {
+        top_dict[key] = 0;
+        }
+        top_dict[key]+=d.subj_top[key];
+      }
+    });
+    console.log('top dict', top_dict);
+
+    top_new = [];
+    for (key in top_dict) {
+        top_new.push({"subject": key, "count": top_dict[key]});
+    }
+
+
+
+    var histosvg = dimple.newSvg("#chartTop", '80%', '25%');
+
+      var myChart = new dimple.chart(histosvg, top_new);
+      myChart.setBounds('20%', '30%', '75%', '40%');
+      var x = myChart.addCategoryAxis("x", "subject");
+      var y = myChart.addMeasureAxis("y", "count");
+      s = myChart.addSeries(null, dimple.plot.bar);
+      // myChart.addLegend(65, 10, 510, 20, "right");
+      myChart.draw(1500);
+      // Invoke the cleaning algorithm 
+      cleanAxis(y, 3);
+
+      histosvg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.05))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "underline")  
+        .text("Top Level Subject Areas");
 
       return myChart;
 }
@@ -515,7 +567,7 @@ function draw(words) {
       .attr("width", w)
       .attr("height", h)
     .append("g")
-      .attr("transform", "translate(170," + (h * 0.5) + ")") //170,100
+      .attr("transform", "translate(170," + (h * 0.5) + ")") 
     .selectAll("text")
       .data(words)
     .enter().append("text")
@@ -537,8 +589,7 @@ function draw(words) {
 function brushed() {
   x.domain(brush.empty() ? x2.domain() : brush.extent());
   var date_range = [parseInt(String(brush.extent()[0]).slice(11,15)),parseInt(String(brush.extent()[1]).slice(11,15))];
-  console.log(date_range);
-  update_graphs(time_view, date_range, histo, cloud);
+  update_graphs(time_view, date_range, histo, s);
 }
 
 // function for cleaning up y axis
