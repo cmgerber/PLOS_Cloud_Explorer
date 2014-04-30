@@ -309,8 +309,15 @@ d3.json("data/articles.json", function(error, json) {
 // function to update all the chart data
 function update_data(data, current_subject) {
 
-  //clear dashboard when new element is clicked on
-  // clearBox('dashboard');
+  //Write currently selected subject as title of Dashboard
+  clearBox('dashtitle');
+  var buttons = d3.select("#dashtitle").append("text")
+    .style("font-size", "16px")
+    .style("font-weight", "700")
+    .style("display", "block")
+    .style("margin", "auto")
+    .style("text-align", "center")
+    .text(current_subject[current_subject.length-1]);
 
   //create dictionaries with raw counts
   var time_dict = {},
