@@ -103,6 +103,24 @@ svg {
   shape-rendering: crispEdges;
 }
 
+/* tool tips */
+
+#tooltip {
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    color: steelblue;
+    opacity: .9333;
+    background: #333;
+    padding: 5px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 999;
+    visibility: hidden;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
 /* Charts */
 
 

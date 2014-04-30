@@ -1,35 +1,40 @@
 { 
   "name": "Computer and information sciences",
+  "count": 1000,
   "children": [
     {
-      "name": "Information technology",      
+      "name": "Information technology",
+      "count": 1000,
       "children": [
 
-        {"name": "Data mining"},
-        {"name": "Data processing"},
-        {"name": "Data reduction"}, 
+        {"name": "Data mining", "count": 100},
+        {"name": "Data processing", "count": 10},
+        {"name": "Data reduction", "count": 100}, 
         {
           "name":  "Databases",
+          "count": 100,
           "children": [
-            {"name": "Relational databases"}
+            {"name": "Relational databases", "count": 10}
           ]
         },
       
-        {"name": "Information architecture"},  
-        {"name": "Information processing"},
-        {"name": "Information storage and retrieval"},
+        {"name": "Information architecture", "count": 100},
+        {"name": "Information processing", "count": 100},
+        {"name": "Information storage and retrieval", "count": 100},
         {
           "name": "Natural language processing",
+          "count": 200,
           "children": [
             {
               "name": "Named entity recognition", 
+              "count": 20,
               "children": [
-                {"name": "Entity disambiguation"}
+                {"name": "Entity disambiguation", "count": 10}
               ]
             }
           ]  
         },
-        {"name": "Text mining"} 
+        {"name": "Text mining","count": 300} 
       ]
     }
   ]
