@@ -67,6 +67,8 @@ var current_subject = ['\/Computer and information sciences'],
 //bar charts
 var s,
     histo,
+    histo_y,
+    maketopbar_y,
     top_level_bar;
 
 //collapsing tree
@@ -93,7 +95,6 @@ var s,
 
 //global data vars
 var data,
-    maketopbar_y,
     date_range = [1900,2200],
     time_view,
     time_data = [],
@@ -312,11 +313,13 @@ function update_data(data, current_subject) {
   //Write currently selected subject as title of Dashboard
   clearBox('dashtitle');
   var buttons = d3.select("#dashtitle").append("text")
-    .style("font-size", "16px")
+    .style("font-size", "20px")
     .style("font-weight", "700")
     .style("display", "block")
     .style("margin", "auto")
     .style("text-align", "center")
+    .style("color", '#000000')
+    .style("text-decoration", "underline")
     .text(current_subject[current_subject.length-1]);
 
   //create dictionaries with raw counts
@@ -457,6 +460,8 @@ function update_graphs() {
   histo.data = new_date;
   histo.draw(1000);
 
+  cleanAxis(histo_y, 2)
+
   //top subject graph draw
   new_top = [];
   for (key in new_top_dict) {
@@ -533,13 +538,13 @@ function makehisto() {
       var myChart = new dimple.chart(histosvg, time_new);
       myChart.setBounds('20%', '30%', '75%', '40%');
       var x = myChart.addCategoryAxis("x", "years");
-      var y = myChart.addMeasureAxis("y", "articles");
-      y.overrideMax = maxY;
+      histo_y = myChart.addMeasureAxis("y", "articles");
+      //y.overrideMax = maxY;
       s = myChart.addSeries(null, dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
-      cleanAxis(y, 2);
+      cleanAxis(histo_y, 2);
 
       histosvg.append("text")
         .attr("x", (width / 2))             
