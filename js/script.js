@@ -60,6 +60,10 @@ d3.select("#dashboard")
     .style("border-color", "rgb(229,150,54)")
     .style("background-color", "#fff");
 
+//current level
+var current_subject = ['\/Computer and information sciences'],
+    current_depth = [0];
+
 //bar charts
 var s,
     histo,
@@ -90,6 +94,8 @@ var s,
 //global data vars
 var data,
     maketopbar_y,
+    date_range = [1900,2200],
+    time_view,
     time_data = [],
     subject_data = [];
 
@@ -135,7 +141,7 @@ viewsvg.append("defs").append("clipPath")
 
 var context = viewsvg.append("g")
     .attr("width", width)
-    .attr("class", "context")
+    .attr("class", "context");
     //.attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
 //vars for word cloud
@@ -163,6 +169,7 @@ var fill = d3.scale.ordinal()
 
     root.children.forEach(collapse);
     update(root);
+
   });
 
   d3.select(self.frameElement).style("height", "800px");
@@ -264,6 +271,31 @@ var fill = d3.scale.ordinal()
       d._children = null;
     }
     update(d);
+    console.log(d);
+    //updating level for creating graphs
+    if (current_depth.indexOf(d.depth)> -1) {
+      if (d.depth === 0) {
+        current_subject = [current_subject.shift()];
+        current_depth = [current_depth.shift()];
+      }
+      else if (d.depth === current_depth[current_depth.length-1]) {
+        current_subject.pop();
+        current_subject.push(d.name);
+      }
+      else {
+        current_subject = current_subject.slice(0, (d.depth));
+        current_depth = current_depth.slice(0, (d.depth));
+        current_subject.push(d.name);
+      }
+    }
+    else {
+      current_subject = current_subject.slice(0, (d.depth-1));
+      current_depth.push(d.depth);
+      current_subject.push(d.parent.name);
+      current_subject.push(d.name);
+    }
+    console.log('subject', current_subject);
+    update_data(data, current_subject);
   }
 
 //load data for graphs
@@ -271,11 +303,14 @@ d3.json("data/articles.json", function(error, json) {
   if (error) return console.warn(error);
 
   data = json;
-  update_data(data);
+  update_data(data, current_subject);
 });
 
 // function to update all the chart data
-function update_data(data) {
+function update_data(data, current_subject) {
+
+  //clear dashboard when new element is clicked on
+  // clearBox('dashboard');
 
   //create dictionaries with raw counts
   var time_dict = {},
@@ -283,23 +318,36 @@ function update_data(data) {
   // time
   for (var key in data) {
 
-    var subj_leaf = data[key]['subj_leaf'];
-    var top = data[key]['subj_top'];
-
-    if ( !(data[key]['publication_date'] in time_dict) ) {
-      time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: [], subj_top: {}};
+    if (current_subject.length < 2) {
+      var level = current_subject;
     }
-    time_dict[data[key]['publication_date']].articles += 1;
-    time_dict[data[key]['publication_date']].subj_leaf.pushArray(subj_leaf);
-    for (var i=0; i<top.length; i++) {
-      var temp = top[i];
-      if ( !(temp in time_dict[data[key]['publication_date']].subj_top) ) {
-        time_dict[data[key]['publication_date']].subj_top[temp] = 0;
+    else {
+      var level = current_subject.join('\/');
+    }
+
+    var subj_leaf = data[key]['subj_leaf'],
+        top = data[key]['subj_top'],
+        subject = data[key]['subject'].join(''),
+        regex = new RegExp(level);
+
+
+
+    //test to see if the subject that was clicked on is a subject of the article.
+    if (regex.test( subject )) {
+      if ( !(data[key]['publication_date'] in time_dict) ) {
+        time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: [], subj_top: {}};
       }
-      time_dict[data[key]['publication_date']].subj_top[temp]+=1;
+      time_dict[data[key]['publication_date']].articles += 1;
+      time_dict[data[key]['publication_date']].subj_leaf.pushArray(subj_leaf);
+      for (var i=0; i<top.length; i++) {
+        var temp = top[i];
+        if ( !(temp in time_dict[data[key]['publication_date']].subj_top) ) {
+          time_dict[data[key]['publication_date']].subj_top[temp] = 0;
+        }
+        time_dict[data[key]['publication_date']].subj_top[temp]+=1;
+      }
     }
   }
-  console.log(time_dict);
 
   //turn dicts into list of dicts
   var objkeys = Object.keys(time_dict);
@@ -316,11 +364,17 @@ function update_data(data) {
     
     }
 
+if (typeof histo !== 'undefined') {
+  update_graphs();
+}
+else {
+  makeviewfinder();
+  histo = makehisto();
+  cloud = makewordcloud();
+  top_level_bar = maketopbar();
+}
 
-makeviewfinder();
-histo = makehisto();
-cloud = makewordcloud();
-top_level_bar = maketopbar();
+
 
 }
 
@@ -330,7 +384,7 @@ Array.prototype.pushArray = function(arr) {
 };
 
 //funtion for updating graphs from view finder
-function update_graphs(time_view, date_range, histo) {
+function update_graphs() {
 
   var new_date = [],
       new_top_dict = {};
@@ -397,12 +451,10 @@ function update_graphs(time_view, date_range, histo) {
   histo.draw(1000);
 
   //top subject graph draw
-  console.log('new dict', new_top_dict);
   new_top = [];
   for (key in new_top_dict) {
       new_top.push({"subject": key, "count": new_top_dict[key]});
   }
-  console.log('new top', new_top);
   top_level_bar.data = new_top;
   top_level_bar.draw(1000);
   // Invoke the cleaning algorithm 
@@ -506,7 +558,6 @@ function maketopbar() {
         top_dict[key]+=d.subj_top[key];
       }
     });
-    console.log('top dict', top_dict);
 
     top_new = [];
     for (var key in top_dict) {
@@ -611,7 +662,7 @@ function draw(words) {
 //enables view finder brushing
 function brushed() {
   x.domain(brush.empty() ? x2.domain() : brush.extent());
-  var date_range = [parseInt(String(brush.extent()[0]).slice(11,15)),parseInt(String(brush.extent()[1]).slice(11,15))];
+  date_range = [parseInt(String(brush.extent()[0]).slice(11,15)),parseInt(String(brush.extent()[1]).slice(11,15))];
   update_graphs(time_view, date_range, histo, s);
 }
 
