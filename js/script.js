@@ -627,14 +627,19 @@ function makewordcloud() {
 }
 
 function create_words(word_slice) {
+
+  //creating a scale for the word cloud font size
+  var count_array = [];
+  word_slice.map(function(d) { count_array.push(d[1]);});
+
+  var maxval = d3.max(count_array);
+  var minval = d3.min(count_array);
+  var word_scale = d3.scale.linear().domain([minval, maxval]).range([10, 40]);
+
+
   d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
     .words(word_slice.map(function(d) {
-      if (d[1]>5) {
-      return {text: d[0], size: d[1] / 4};
-    }
-    else {
-      return {text: d[0], size: d[1]*2};
-    }
+      return {text: d[0], size: word_scale(d[1])};
     }))
     .rotate(function() { return  0; })  //~~(Math.random() * 2) * 90 (for different orientations)
     .font("Impact")
