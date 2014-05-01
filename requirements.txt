@@ -2,3 +2,4 @@ requests
 nltk
 numpy
 pandas
+xlrd
