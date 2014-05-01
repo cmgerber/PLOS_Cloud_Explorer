@@ -69,6 +69,7 @@ var s,
     histo,
     histo_y,
     maketopbar_y,
+    maketopbar_x,
     top_level_bar;
 
 //collapsing tree
@@ -511,7 +512,7 @@ function update_graphs() {
   top_level_bar.data = new_top;
   top_level_bar.draw(1000);
   // Invoke the cleaning algorithm 
-  cleanAxis(maketopbar_y, 2);
+  cleanAxis(maketopbar_x, 2);
 
 }
 
@@ -620,22 +621,22 @@ function maketopbar() {
     // var maxY = d3.max(top_new.map(function(item) {return item.count;}));
 
 
-    var histosvg = dimple.newSvg("#chartTop", '80%', '25%');
+    var histosvg = dimple.newSvg("#chartTop", '90%', '25%');
 
       var myChart = new dimple.chart(histosvg, top_new);
-      myChart.setBounds('20%', '30%', '75%', '40%');
-      var x = myChart.addCategoryAxis("x", "subject");
-      maketopbar_y = myChart.addMeasureAxis("y", "count");
+      myChart.setBounds('60%', '15%', '40%', '70%');
+      maketopbar_x = myChart.addMeasureAxis("x", "count");
+      maketopbar_y = myChart.addCategoryAxis("y", "subject");
       // y.overrideMax = maxY;
       s = myChart.addSeries(null, dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
-      cleanAxis(maketopbar_y, 3);
+      cleanAxis(maketopbar_x, 3);
 
       histosvg.append("text")
         .attr("x", (width / 2))             
-        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.05))
+        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.02))
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
         .style("text-decoration", "underline")  
