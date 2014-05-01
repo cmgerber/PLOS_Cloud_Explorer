@@ -627,12 +627,13 @@ function maketopbar() {
       myChart.setBounds('60%', '15%', '40%', '70%');
       maketopbar_x = myChart.addMeasureAxis("x", "count");
       maketopbar_y = myChart.addCategoryAxis("y", "subject");
+      maketopbar_y.addOrderRule("count", false);
       // y.overrideMax = maxY;
       s = myChart.addSeries(null, dimple.plot.bar);
       // myChart.addLegend(65, 10, 510, 20, "right");
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
-      cleanAxis(maketopbar_x, 3);
+      cleanAxis(maketopbar_x, 2);
 
       histosvg.append("text")
         .attr("x", (width / 2))             
@@ -735,7 +736,7 @@ function brushed() {
          var del = false;
          // If there is an interval set
          if (oneInEvery > 1) {
-            if (axis.shapes.selectAll("text")[0].length > 4) {
+            if (axis.shapes.selectAll("text")[0].length > 6) {
              // Operate on all the axis text
              axis.shapes.selectAll("text")
              .each(function (d) {
