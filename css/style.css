@@ -38,10 +38,10 @@ textarea											  {}
 
 /* header */
 #header {
-    color: rgb(255,153,0);
+    color: #99d8c9;
     text-align: left;
-    font-weight: 700;
-    font-style: italic;
+    font-weight: 500;
+    font-family: 'Gill Sans';
 }
 
 /* collapsable tree */
@@ -56,7 +56,8 @@ textarea											  {}
 }
 
 .node text {
-  font: 10px sans-serif;
+  font: 10px;
+  font-family: 'Gill Sans';
 }
 
 .link {
@@ -106,7 +107,7 @@ svg {
 /* tool tips */
 
 #tooltip {
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    font-family: 'Gill Sans';
     font-weight: 400;
     color: steelblue;
     opacity: .9333;
