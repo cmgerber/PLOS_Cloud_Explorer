@@ -25,7 +25,7 @@ if (divPadding > 8) { divPadding = 8; }
 var rightWidth = 0.3 * windowWidth - (2 * divPadding);
 if (rightWidth > 400 - (2 * divPadding)) { rightWidth = 400 - (2 * divPadding); }
 
-var centerWidth = windowWidth - rightWidth - (4 * divPadding) - (4 * borderWidth);
+var leftWidth = windowWidth - rightWidth - (4 * divPadding) - (4 * borderWidth);
 
 var mainHeight = windowHeight - headerHeight - topMargin;
 var dashboardHeight = mainHeight - (2 * divPadding) - (2 * borderWidth);
@@ -48,7 +48,7 @@ d3.select("#header")
 d3.select("#tree")
     .style("float", "left")
     .style("margin-top", topMargin + "px")
-    .style("width", centerWidth + "px")
+    .style("width", leftWidth + "px")
     .style("height", mainHeight + "px");
 d3.select("#dashboard")
     .style("float", "left")
@@ -59,7 +59,7 @@ d3.select("#dashboard")
     .style("background-color", "#fff");
 
 //current level
-var current_subject = ['\/Computer and information sciences'],
+var current_subject = [''],
     current_depth = [0];
 
 //bar charts
@@ -72,8 +72,8 @@ var s,
 
 //collapsing tree
 
-  var margin = {top: 20, right: 50, bottom: 20, left: 180},
-      width = ((document.getElementById("tree").offsetWidth) * 1) - margin.right - margin.left,
+  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+      width = ((document.getElementById("tree").offsetWidth) * 2) - margin.right - margin.left,
       height = ((document.getElementById("tree").offsetHeight) * 0.90) - margin.top - margin.bottom;
       
   var i = 0,
@@ -86,11 +86,14 @@ var s,
   var diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.y, d.x]; });
 
-  var svg = d3.select("#tree").append("svg")
+  var svg = d3.select("#tree")
+      .style("overflow-y", "auto")
+      .style("overflow-x", "auto")
+    .append("svg")
       .attr("width", width + margin.right + margin.left)
       .attr("height", height + margin.top + margin.bottom)
     .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");    
 
 //global data vars
 var data,
@@ -154,9 +157,9 @@ var fill = d3.scale.ordinal()
 
 //load data for collapsing tree
 
-  d3.json("/data/plos.json", function(error, flare) {
-    root = flare;
-    root.x0 = height / 2;
+  d3.json("/data/plos_tree.json", function(error, plos) {
+    root = plos;
+    root.x0 = height * 1.5;
     root.y0 = 0;
 
     function collapse(d) {
@@ -166,7 +169,7 @@ var fill = d3.scale.ordinal()
         d.children = null;
       }
     }
-
+    console.log(root);
     root.children.forEach(collapse);
     update(root);
 
@@ -205,7 +208,7 @@ var fill = d3.scale.ordinal()
         .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
         .on("mouseover", mouseoverTree)
         .on("mouseout", mouseoutTree)
-        .on("click", click);
+        .on("click", click); 
 
     nodeEnter.append("circle")
         .attr("r", function(d) {return node_scale(d.count);}) //1e-6
