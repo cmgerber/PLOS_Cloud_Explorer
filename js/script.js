@@ -349,6 +349,28 @@ function mouseoutTree(d, i) {
         .style("visibility", "hidden");
 }
 
+//mousoever tool tip for view finder
+function mouseoverViewFinder(d, i) {
+
+  console.log('loc', d3.select('#chartFinder').attr("cy"));
+  console.log(document.getElementById("chartFinder").scrollWidth);
+
+  offsets = document.getElementById("chartFinder").getBoundingClientRect();
+
+  d3.select("#tooltip")
+      .style("visibility", "visible")
+      .html("<span style='font-weight: bold; font-size: 120%'>Click and drag to select a time range.</span>")
+      .style("top", (offsets.top -40) +"px")
+      .style("left", offsets.left +"px");
+}
+
+//mouseout tool tip for tree
+function mouseoutViewFinder(d, i) {
+
+    d3.select("#tooltip")
+        .style("visibility", "hidden");
+}
+
 // function to update all the chart data
 function update_data(data, current_subject) {
 
@@ -556,6 +578,8 @@ function makeviewfinder() {
       .call(xAxis2);
 
     context.append("g")
+      .on("mouseover", mouseoverViewFinder)
+      .on("mouseout", mouseoutViewFinder)
       .attr("class", "x brush")
       .call(brush)
     .selectAll("rect")
