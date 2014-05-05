@@ -56,8 +56,6 @@ d3.select("#dashboard")
     .style("height", dashboardHeight + "px")
     .style("padding", divPadding + "px")
     .style("margin-top", topMargin + "px")
-    .style("border", borderWidth + "px solid")
-    .style("border-color", "rgb(229,150,54)")
     .style("background-color", "#fff");
 
 //current level
@@ -74,7 +72,7 @@ var s,
 
 //collapsing tree
 
-  var margin = {top: 20, right: 50, bottom: 20, left: 50},
+  var margin = {top: 20, right: 50, bottom: 20, left: 180},
       width = ((document.getElementById("tree").offsetWidth) * 1) - margin.right - margin.left,
       height = ((document.getElementById("tree").offsetHeight) * 0.90) - margin.top - margin.bottom;
       
@@ -356,7 +354,7 @@ function update_data(data, current_subject) {
   clearBox('dashtitle');
   var buttons = d3.select("#dashtitle").append("text")
     .style("font-size", "20px")
-    .style("font-weight", "700")
+    .style("font-weight", "bold")
     .style("display", "block")
     .style("margin", "auto")
     .style("text-align", "center")
@@ -593,8 +591,9 @@ function makehisto() {
         .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.05))
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
+        .style("font-weight", "bold")
         .style("text-decoration", "underline")  
-        .text("Num Articles per Year");
+        .text("Articles Per Year");
 
       return myChart;
 }
@@ -640,6 +639,7 @@ function maketopbar() {
         .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.02))
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
+        .style("font-weight", "bold")
         .style("text-decoration", "underline")  
         .text("Top Level Subject Areas");
 
@@ -677,7 +677,7 @@ function create_words(word_slice) {
 
   var maxval = d3.max(count_array);
   var minval = d3.min(count_array);
-  var word_scale = d3.scale.linear().domain([minval, maxval]).range([10, 40]);
+  var word_scale = d3.scale.linear().domain([minval, maxval]).range([14, 36]);
 
 
   d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
