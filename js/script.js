@@ -167,7 +167,7 @@ var fill = d3.scale.ordinal()
 
 //load data for collapsing tree
 
-  d3.json("/data/plos_tree.json", function(error, plos) {
+  d3.json("data/plos_tree.json", function(error, plos) {
     root = plos;
     root.x0 = height / 2;
     root.y0 = 0;
