@@ -768,7 +768,7 @@ function create_words(word_slice) {
 
   var maxval = d3.max(count_array);
   var minval = d3.min(count_array);
-  var word_scale = d3.scale.linear().domain([minval, maxval]).range([14, 36]);
+  var word_scale = d3.scale.linear().domain([minval, maxval]).range([14, 32]);
 
 
   d3.layout.cloud().size([((document.getElementById("dashboard").offsetWidth) * 0.80), ((document.getElementById("dashboard").offsetHeight) * 0.33)])
