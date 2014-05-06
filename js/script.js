@@ -411,7 +411,6 @@ d3.json("data/articles_coded.json", function(error, json) {
       data[key]['subject'][i] = (subj_look[data[key]['subject'][i]]);
     }
   }
-  console.log('data', data['10.1371/journal.pone.0008858']);
   update_data(data, current_subject);
 });
 
@@ -431,7 +430,6 @@ function update_data(data, current_subject) {
     .style("text-transform", "uppercase")
     .text(current_subject[current_subject.length-1]);
 
-  console.log('current', current_subject);
   //create dictionaries with raw counts
   var time_dict = {},
       subject_dict = {};
