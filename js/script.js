@@ -65,13 +65,14 @@ d3.select("#dashboard")
     .style("background-color", "#fff");
 
 //current level
-var current_subject = [''],
+var current_subject = ['PLOS'],
     current_depth = [0];
 
 //bar charts
 var s,
     histo,
     histo_y,
+    histo_x,
     maketopbar_y,
     maketopbar_x,
     top_level_bar;
@@ -198,9 +199,6 @@ var fill = d3.scale.ordinal()
     var minval = d3.min(node_array);
     var node_scale = d3.scale.sqrt().domain([minval, maxval]).range([4, 14]);
 
-    console.log('max', maxval);
-    console.log('min', minval);
-
     // Normalize for fixed-depth.
     nodes.forEach(function(d) { d.y = d.depth * 180; });
 
@@ -218,7 +216,7 @@ var fill = d3.scale.ordinal()
 
     nodeEnter.append("circle")
         .attr("r", function(d) {return node_scale(d.count);}) //1e-6
-        .style("fill", function(d) {console.log(d); return d._children ? "lightsteelblue" : "#fff"; });
+        .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
         // .append("circle:title")
         // .text(function(d) { return 'Count: ' + d.count; });
 
@@ -323,13 +321,7 @@ var fill = d3.scale.ordinal()
     update_data(data, current_subject);
   }
 
-//load data for graphs
-d3.json("data/articles.json", function(error, json) {
-  if (error) return console.warn(error);
 
-  data = json;
-  update_data(data, current_subject);
-});
 
 //mousoever tool tip for tree
 function mouseoverTree(d, i) {
@@ -356,8 +348,74 @@ function mouseoutTree(d, i) {
         .style("visibility", "hidden");
 }
 
+//mousoever tool tip for view finder
+function mouseoverViewFinder(d, i) {
+
+  offsets = document.getElementById("chartFinder").getBoundingClientRect();
+
+  d3.select("#tooltip")
+      .style("visibility", "visible")
+      .html("<span style='font-weight: bold; font-size: 120%'>Click and drag to select a time range.</span>")
+      .style("top", (offsets.top -40) +"px")
+      .style("left", offsets.left +"px");
+}
+
+//mouseout tool tip for tree
+function mouseoutViewFinder(d, i) {
+
+    d3.select("#tooltip")
+        .style("visibility", "hidden");
+}
+
+/**************************************
+
+LOAD DATA
+
+***************************************/
+
+//Global data vars
+var leaf_look,
+    top_look,
+    subj_look;
+
+d3.json("data/dict_subj_leaf.json", function(error, leaf) {
+  if (error) return console.warn(error);
+
+  leaf_look = leaf;
+});
+
+d3.json("data/dict_subj_top.json", function(error, top) {
+  if (error) return console.warn(error);
+
+  top_look = top;
+});
+
+d3.json("data/dict_subject_dec.json", function(error, dec) {
+  if (error) return console.warn(error);
+
+  subj_look = dec;
+});
+
+
+
+//load data for graphs
+d3.json("data/articles_coded.json", function(error, json) {
+  if (error) return console.warn(error);
+
+  data = json;
+
+  for (var key in data) {
+    for (var i=0; i<data[key]['subject'].length; i++) {
+      data[key]['subject'][i] = (subj_look[data[key]['subject'][i]]);
+    }
+  }
+  console.log('data', data['10.1371/journal.pone.0008858']);
+  update_data(data, current_subject);
+});
+
 // function to update all the chart data
 function update_data(data, current_subject) {
+
 
   //Write currently selected subject as title of Dashboard
   clearBox('dashtitle');
@@ -371,28 +429,43 @@ function update_data(data, current_subject) {
     .style("text-transform", "uppercase")
     .text(current_subject[current_subject.length-1]);
 
+  console.log('current', current_subject);
   //create dictionaries with raw counts
   var time_dict = {},
       subject_dict = {};
-  // time
-  for (var key in data) {
 
+  //set up variable for matching tree to graphs
     if (current_subject.length < 2) {
-      var level = current_subject;
+      var level = current_subject[0];
     }
     else {
       var level = current_subject.join('\/');
     }
+    level = level.replace(/PLOS/gi, '');
 
-    var subj_leaf = data[key]['subj_leaf'],
-        top = data[key]['subj_top'],
-        subject = data[key]['subject'].join(''),
+  // getting data
+  for (var key in data) {
+
+    //convert data from numbers to words using lookup dictionaries
+    var subj_leaf = [],
+        top = [],
+        subject_temp = [];
+
+    
+
+    var subject = data[key]['subject'].join(''),
         regex = new RegExp(level);
-
 
 
     //test to see if the subject that was clicked on is a subject of the article.
     if (regex.test( subject )) {
+      for (var i=0; i<data[key]['subj_leaf'].length; i++) {
+        subj_leaf.push(leaf_look[data[key]['subj_leaf'][i]]);
+      }
+
+      for (var f=0; f<data[key]['subj_top'].length; f++) {
+        top.push(top_look[data[key]['subj_top'][f]]);
+      }
       if ( !(data[key]['publication_date'] in time_dict) ) {
         time_dict[data[key]['publication_date']] = {articles: 0, subj_leaf: [], subj_top: {}};
       }
@@ -510,6 +583,7 @@ function update_graphs() {
   histo.draw(1000);
 
   cleanAxis(histo_y, 2);
+  histo_x.titleShape.remove();
 
   //top subject graph draw
   new_top = [];
@@ -520,6 +594,7 @@ function update_graphs() {
   top_level_bar.draw(1000);
   // Invoke the cleaning algorithm 
   cleanAxis(maketopbar_x, 2);
+  maketopbar_x.titleShape.remove();
 
 }
 
@@ -586,7 +661,8 @@ function makehisto() {
 
       var myChart = new dimple.chart(histosvg, time_new);
       myChart.setBounds('20%', '30%', '75%', '40%');
-      var x = myChart.addCategoryAxis("x", "years");
+      histo_x = myChart.addCategoryAxis("x", "years");
+
       histo_y = myChart.addMeasureAxis("y", "articles");
       //y.overrideMax = maxY;
       s = myChart.addSeries(null, dimple.plot.bar);
@@ -594,6 +670,8 @@ function makehisto() {
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
       cleanAxis(histo_y, 2);
+      //remove x axis title
+      histo_x.titleShape.remove();
 
       histosvg.append("text")
         .attr("x", (width / 2))             
@@ -642,6 +720,8 @@ function maketopbar() {
       myChart.draw(1500);
       // Invoke the cleaning algorithm 
       cleanAxis(maketopbar_x, 2);
+      //remove x axis title
+      maketopbar_x.titleShape.remove();
 
       histosvg.append("text")
         .attr("x", (width / 2))             

@@ -1,3 +1,4 @@
+ipython-notebook
 requests
 nltk
 numpy
