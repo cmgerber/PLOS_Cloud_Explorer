@@ -56,7 +56,7 @@ These data describe article subject areas in a very useful way. The "subject are
  u'/Biology and life sciences/Organisms/Animals/Vertebrates']
 ```
 
-The entire PLOS thesaurus was kindly provided to us as a spreadsheet with thousands of rows, one node per row. 
+The entire PLOS polyhierarchy was kindly provided to us as a spreadsheet with thousands of rows, one node per row. 
 
 
 ### We transformed the data into two JSON objects
@@ -67,7 +67,7 @@ The entire PLOS thesaurus was kindly provided to us as a spreadsheet with thousa
 We transformed the article data (a 400 MB pickled DataFrame) into a JSON object containing a list of articles (indexed by DOI) and the data about them. Due to the large file size, we excluded several pieces of information that we weren't immediately using in our data visualization (though we could add these back later). Currently, each article in the JSON object has the publication date (truncated to year only) and the list of subject area paths that were provided by the API. In addition, for each article, we calculated the set of top-level (root) and lowest-level (leaf) terms that appear in its subject area field. We explain how these are used below.
 
 #### Subject tree
-We transformed the PLOS Thesaurus from its spreadsheet representation into a JSON object with a tree structure. For each node in the tree, we also calculated the number of articles that include that node in their subject area paths (using string search). This allows us to visualize the "size" of each node in the tree.
+We transformed the PLOS Polyhierarchy from its spreadsheet representation into a JSON object with a tree structure. For each node in the tree, we also calculated the number of articles that include that node in their subject area paths (using string search). This allows us to visualize the "size" of each node in the tree.
 
 
 ### We used JavaScript to interactively visualize the data
@@ -77,10 +77,10 @@ We used D3.js, JQuery, and Dimple.js to create a dashboard for interactive explo
 * an interactive SVG visualization of the subject area tree, allowing sub-trees to be selected;
 * a graph of the total number of articles over the time, allowing a specific time span to be selected. 
 
-For the selected time span and subject areas, the dashboard displays:
+For the selected time span and subject area, the dashboard displays:
 
 * a bar graph of the number of articles per year matching any of the subjects under that node;
-* a histogram of the most frequent top-level subject terms;
+* a histogram of the distribution of top-level subject terms;
 * a word cloud composed of the leaf-level subject terms associated with all the articles.
 
 
@@ -118,12 +118,5 @@ We would like to be able to show users specific articles that match the subject 
 
 
 ## Distribution of work
-> a paragraph that outlines how you split the work among group members and which describes your individual contributions to the work.
 
-(This is a rough approximation, please edit)
-
-Anna: bulk data download, communication with PLOS staff, web app coding, web app design
-
-Colin: bulk data download, article data analysis, web app coding, web app design
-
-Akos: article data analysis, article & thesaurus data transformation, documentation
+Anna worked on bulk data download, communication with PLOS staff, web app coding, and web app design. Colin worked on bulk data download, article data analysis, web app coding, and web app design. Akos worked on article data analysis, article & thesaurus data transformation, and documentation.
