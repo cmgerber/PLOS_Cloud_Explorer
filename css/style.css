@@ -1,6 +1,6 @@
 /* reset */
 
-html, body, address, blockquote, del, div, h1, h2, h3, h4, h5, h6, hr, ins, noscript, p, pre, dl, dt, dd, li, ol, ul, table, caption, colgroup, col, thead, tfoot, tbody, tr, td, th, form, button, fieldset, legend, label, select, optgroup, option, textarea, a, bdo, br, img, map, area, object, param, q, script, span, sub, sup, abbr, acronym, cite, code, del, dfn, em, ins, kbd, samp, strong, var, b, big, i, small, tt{border:0;font-family:inherit;font-size:100%;font-style:inherit;font-weight:inherit;margin:0;outline:0;padding:0;vertical-align:baseline;}
+html, body, address, blockquote, del, div, h1, h2, h3, h4, h5, h6, hr, ins, noscript, p, pre, dl, dt, dd, li, ol, ul, table, caption, colgroup, col, thead, tfoot, tbody, tr, td, th, form, button, fieldset, legend, label, select, optgroup, option, textarea, a, bdo, br, img, map, area, object, param, q, script, span, sub, sup, abbr, acronym, cite, code, del, dfn, em, ins, kbd, samp, strong, var, b, big, i, small, tt{border:0;font-family:'Gill Sans';font-size:100%;font-style:inherit;font-weight:inherit;margin:0;outline:0;padding:0;vertical-align:baseline;}
 ol, ul{list-style:none;}
 th{text-align:left;}
 table{border-collapse:collapse;}
@@ -10,14 +10,14 @@ table{border-collapse:collapse;}
 /* global */
 
 body 											      {background:#f0f0f0;}
-a:link,
-a:visited										    {}
-a:hover,
-a:visited:hover									{}
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}								{}
 
 table td										    {}
 
-h1												      {font-size:2em; font-weight:bold; margin:0 0 20px 0;}
+h1												      {font-size:2em; font-weight:bold;}
 h2												      {}
 h3												      {}
 h4												      {}
@@ -128,7 +128,7 @@ svg {
 
 /* container */
 
-main												    {margin:40px auto; position:relative; width:800px;}
+main												    {position:relative; width:800px;}
 
 #viz												    {background:#fff;}
 

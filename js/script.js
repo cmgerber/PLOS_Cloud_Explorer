@@ -6,10 +6,10 @@ var windowWidth = window.innerWidth - 8;
 
 var borderWidth = 1;
 
-var headerHeight = 0.07 * windowHeight;
+var headerHeight = 0.05 * windowHeight;
 if (headerHeight > 50) { headerHeight = 50; }
 
-var headerFontSize = 0.05 * windowHeight;
+var headerFontSize = 0.04 * windowHeight;
 if (headerFontSize > 36) { headerFontSize = 36; }
 
 var headerFontSpacing = windowWidth * 0.0025;
@@ -45,6 +45,12 @@ d3.select("#header")
     .style("background-color", "rgb(68,68,68)")
     .style("padding-left", "1%")
     .style("padding-right", "3%");
+d3.select("#main-title")
+    .style("vertical-align", "middle")
+    .style("height", "100%");
+d3.select("#about-link")
+    .style("horizontal-align", "left")
+    .style("font-size", headerFontSize * 0.5 + "px");
 d3.select("#tree")
     .style("float", "left")
     .style("margin-top", topMargin + "px")
@@ -82,7 +88,7 @@ var s,
       root;
 
   var tree = d3.layout.tree()
-      .size([height, width]);
+      .size([height* 1.18, width]);
 
   var diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.y, d.x]; });
@@ -92,7 +98,8 @@ var s,
       .style("overflow-x", "auto")
     .append("svg")
       .attr("width", width + margin.right + margin.left)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", mainHeight * 1.18)
+      .style("text-anchor", "middle")
     .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");    
 
@@ -160,7 +167,7 @@ var fill = d3.scale.ordinal()
 
   d3.json("/data/plos_tree.json", function(error, plos) {
     root = plos;
-    root.x0 = height * 1.5;
+    root.x0 = height / 2;
     root.y0 = 0;
 
     function collapse(d) {
@@ -325,7 +332,7 @@ function mouseoverTree(d, i) {
 
   d3.select("#tooltip")
       .style("visibility", "visible")
-      .html("<span style='font-weight: bold; font-size: 120%'>" + d.name + "</span><br/># of articles:&nbsp;" + addCommas(d.count))
+      .html("<span style='font-weight: bold; font-size: 120%'>" + d.name + "</span><br/>" + addCommas(d.count) + "&nbsp;articles")
       .style("top", function () { return (d3.max([50,d3.event.pageY - 70]))+"px";})
       .style("left", function () { return (d3.max([0,d3.event.pageX - 70]))+"px";});
 }
@@ -413,13 +420,13 @@ function update_data(data, current_subject) {
   //Write currently selected subject as title of Dashboard
   clearBox('dashtitle');
   var buttons = d3.select("#dashtitle").append("text")
-    .style("font-size", "20px")
+    .style("font-size", "18px")
     .style("font-weight", "bold")
     .style("display", "block")
     .style("margin", "auto")
     .style("text-align", "center")
     .style("color", '#000000')
-    .style("text-decoration", "underline")
+    .style("text-transform", "uppercase")
     .text(current_subject[current_subject.length-1]);
 
   console.log('current', current_subject);
@@ -631,8 +638,6 @@ function makeviewfinder() {
       .call(xAxis2);
 
     context.append("g")
-      .on("mouseover", mouseoverViewFinder)
-      .on("mouseout", mouseoutViewFinder)
       .attr("class", "x brush")
       .call(brush)
     .selectAll("rect")
@@ -670,11 +675,11 @@ function makehisto() {
 
       histosvg.append("text")
         .attr("x", (width / 2))             
-        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.05))
+        .attr("y", ((document.getElementById("dashboard").offsetHeight) * 0.055))
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
         .style("font-weight", "bold")
-        .style("text-decoration", "underline")  
+        .style("text-transform", "uppercase")  
         .text("Articles Per Year");
 
       return myChart;
@@ -724,7 +729,7 @@ function maketopbar() {
         .attr("text-anchor", "middle")  
         .style("font-size", "12px") 
         .style("font-weight", "bold")
-        .style("text-decoration", "underline")  
+        .style("text-transform", "uppercase") 
         .text("Top Level Subject Areas");
 
       return myChart;
