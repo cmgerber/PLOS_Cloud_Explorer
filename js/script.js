@@ -152,7 +152,9 @@ viewsvg.append("defs").append("clipPath")
 
 var context = viewsvg.append("g")
     .attr("width", width)
-    .attr("class", "context");
+    .attr("class", "context")
+    .on("mouseover", mouseoverViewFinder)
+    .on("mouseout", mouseoutViewFinder);
     //.attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
 
 //vars for word cloud
