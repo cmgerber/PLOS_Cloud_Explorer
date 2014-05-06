@@ -353,9 +353,6 @@ function mouseoutTree(d, i) {
 //mousoever tool tip for view finder
 function mouseoverViewFinder(d, i) {
 
-  console.log('loc', d3.select('#chartFinder').attr("cy"));
-  console.log(document.getElementById("chartFinder").scrollWidth);
-
   offsets = document.getElementById("chartFinder").getBoundingClientRect();
 
   d3.select("#tooltip")
