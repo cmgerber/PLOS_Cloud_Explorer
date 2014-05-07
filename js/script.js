@@ -429,7 +429,12 @@ function update_data(data, current_subject) {
     .style("text-align", "center")
     .style("color", '#000000')
     .style("text-transform", "uppercase")
-    .text(current_subject[current_subject.length-1]);
+    .style('cursor', 'pointer')
+    .style('cursor', 'hand')
+    .text(current_subject[current_subject.length-1])
+    .on("click", function() { window.open("http://www.plosone.org/browse/" + current_subject[current_subject.length-1].replace(/ /g, '_'), '_blank');});
+    // .append("a")
+    //   .attr('xlink:href', "http://www.plosone.org/browse/" + current_subject[current_subject.length-1].replace(/ /g, '_'));
 
   //create dictionaries with raw counts
   var time_dict = {},
