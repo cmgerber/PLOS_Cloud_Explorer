@@ -320,6 +320,7 @@ var fill = d3.scale.ordinal()
       current_subject.push(d.parent.name);
       current_subject.push(d.name);
     }
+    console.log(current_subject.join('\/'));
     update_data(data, current_subject);
   }
 
@@ -791,6 +792,8 @@ function draw(words) {
       .attr("height", h)
     .append("g")
       .attr("transform", "translate(170," + (h * 0.5) + ")") 
+    // .append("a")
+    //   .attr("xlink:href", "word")
     .selectAll("text")
       .data(words)
     .enter().append("text")
@@ -800,13 +803,22 @@ function draw(words) {
       .style("fill", function(d, i) { 
         if(i%5 === 0){counter++;} 
         return fill(counter); })
+      .style('cursor', 'pointer')
+      .style('cursor', 'hand')
       .attr("text-anchor", "middle")
       .attr("transform", function(d) {
         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
       })
-      .text(function(d) { return d.text; });
+      .text(function(d) { return d.text; })
+      .on("click", function(d) {word_click(d.text);});
 }
 
+//creates link for word click
+function word_click(words) {
+  var prep_word = words.replace(/ /g, '_');
+  var url = 'http://www.plosone.org/browse/' + prep_word;
+  window.open(url, '_blank');
+}
 
 //enables view finder brushing
 function brushed() {
