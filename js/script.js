@@ -29,8 +29,8 @@ var leftWidth = windowWidth - rightWidth - (4 * divPadding) - (4 * borderWidth);
 
 var mainHeight = windowHeight - headerHeight - topMargin;
 var dashboardHeight = mainHeight - (2 * divPadding) - (2 * borderWidth);
-var optionsHeight = (mainHeight * 0.4) - (2 * divPadding) - (2 * borderWidth);
-var navigatorHeight = mainHeight - optionsHeight - topMargin - (4 * divPadding) - (4 * borderWidth);
+// var optionsHeight = (mainHeight * 0.4) - (2 * divPadding) - (2 * borderWidth);
+// var navigatorHeight = mainHeight - optionsHeight - topMargin - (4 * divPadding) - (4 * borderWidth);
 
 d3.select("#wrapper")
     .style("height", windowHeight + "px")
@@ -510,6 +510,7 @@ else {
   histo = makehisto();
   cloud = makewordcloud();
   top_level_bar = maketopbar();
+  drawTutorial();
 }
 
 
@@ -881,5 +882,281 @@ function addCommas(nStr) {
     return x1 + x2;
 }
 
+/****************************************************
+
+    TUTORIAL WINDOW
+
+****************************************************/
+
+var highlight_color_xtra = "#08519c";
+var highlight_color_xtra2 = "#08306b";
+
+
+function drawTutorial() {
+
+    var windowHeight = window.innerHeight;
+    var windowWidth = window.innerWidth;
+
+    var tutorial = d3.select("#tutorial")
+        .attr("width", windowWidth)
+        .attr("height", windowHeight);
+
+    var tutorialscreen = tutorial.append("svg")
+        .attr("class", "tutorialscreen")
+        .attr("width", windowWidth)
+        .attr("height", windowHeight)
+        .append("g");
+
+    tutorialscreen.append("rect")
+        .attr("class", "tutorialitem")
+        .attr("width", windowWidth)
+        .attr("height", windowHeight)
+        .style("fill", "#000")
+        .style("opacity", 0.6);
+
+    findertut = document.getElementById("chartFinder").getBoundingClientRect();
+    finderHeight = document.getElementById("chartFinder").offsetHeight;
+
+
+    var finderbox = tutorialscreen.append("g")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + findertut.left + "," + (findertut.top - 15) + ")");
+
+    finderbox.append("rect")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth * 1.05)
+        .attr("height", finderHeight * 1.3)
+        .attr("rx", 8)
+        .attr("ry", 8)
+        .style("stroke", highlight_color_xtra)
+        .style("stroke-width", "2px")
+        .style("fill", "#888")
+        .style("fill-opacity", 0.85)
+        .style("stroke-opacity", 1);
+
+    var findertext = finderbox.append("text")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth * 0.8)
+        .attr("height", finderHeight * 0.45)
+        .attr("transform", "translate(0," + (finderHeight * 0.15) + ")")
+        .style("stroke", highlight_color_xtra2)
+        .style("fill", highlight_color_xtra2)
+        .style("font-size", mainHeight * 0.03)
+        .style("font-weight", "400");
+
+    var strings = ["You can use this chart to change the", "time range you want to view." ];
+    for (var s=0; s<strings.length; s++) {
+        findertext.append("tspan")
+            .attr("x", rightWidth * 0.5)
+            .attr("dy", "1.35em")
+            .attr("text-anchor", "middle")
+            .text(strings[s]);
+    }
+
+    cloudtut = document.getElementById("wordcloud").getBoundingClientRect();
+    cloudHeight = document.getElementById("wordcloud").offsetHeight;
+
+    var cloudbox = tutorialscreen.append("g")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + cloudtut.left + ',' + (cloudtut.top) + ")");
+
+    cloudbox.append("rect")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth )
+        .attr("height", cloudHeight * 0.9)
+        .attr("rx", 8)
+        .attr("ry", 8)
+        .style("stroke", highlight_color_xtra)
+        .style("stroke-width", "2px")
+        .style("fill", "#888")
+        .style("fill-opacity", 0.85)
+        .style("stroke-opacity", 1);
+
+    var cloudtext = cloudbox.append("text")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth * 0.8)
+        .attr("height", cloudHeight * 0.8)
+        .attr("transform", "translate(0," + (cloudHeight * 0.1) + ")")
+        .style("stroke", highlight_color_xtra2)
+        .style("fill", highlight_color_xtra2)
+        .style("font-size", mainHeight * 0.03)
+        .style("font-weight", "400");
+
+    var strings = splitLines('This word cloud shows the most frequent subjects (key words) in the subsection of articles that are surrently selected', 30);
+    for (var s=0; s<strings.length; s++) {
+        cloudtext.append("tspan")
+            .attr("x", rightWidth * 0.5)
+            .attr("dy", "1.35em")
+            .attr("text-anchor", "middle")
+            .text(strings[s]);
+    }
+
+    treetut = document.getElementById("tree").getBoundingClientRect();
+    treeHeight = document.getElementById("tree").offsetHeight;
+
+    var treebox = tutorialscreen.append("g")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + treetut.left + ',' + (treetut.top) + ")");
+
+    treebox.append("rect")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth )
+        .attr("height", treeHeight * 0.9)
+        .attr("rx", 8)
+        .attr("ry", 8)
+        .style("stroke", highlight_color_xtra)
+        .style("stroke-width", "2px")
+        .style("fill", "#888")
+        .style("fill-opacity", 0.85)
+        .style("stroke-opacity", 1);
+
+    var treetext = treebox.append("text")
+        .attr("class", "tutorialitem")
+        .attr("width", rightWidth * 0.8)
+        .attr("height", treeHeight * 0.8)
+        .attr("transform", "translate(0," + (treeHeight * 0.1) + ")")
+        .style("stroke", highlight_color_xtra2)
+        .style("fill", highlight_color_xtra2)
+        .style("font-size", mainHeight * 0.03)
+        .style("font-weight", "400");
+
+    var strings = splitLines('This collapsable tree shows the polyhierarchy that is used by PLOS to categoriez their papers. It is considered a polyhierarchy because you can reach the same leaf node through several differnt paths. The nodes are sized by the number of articles they contain. When you click on a node the graphs on the right will udate with data pertaining to articles related to the subject.', 40);
+    for (var s=0; s<strings.length; s++) {
+        treetext.append("tspan")
+            .attr("x", rightWidth * 0.5)
+            .attr("dy", "1.35em")
+            .attr("text-anchor", "middle")
+            .text(strings[s]);
+    }
+
+    var closetutorial = tutorialscreen.append("g")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + (windowWidth * 0.34) + "," + (windowHeight * 0.85) + ")")
+        .attr("class", "got_it");
+
+    closetutorial.append("rect")
+        .attr("class", "tutorialitem")
+        .attr("width", windowWidth * 0.22)
+        .attr("height", windowWidth * 0.05)
+        .attr("rx", 8)
+        .attr("ry", 8)
+        .style("fill", highlight_color_xtra)
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand')
+        .style("stroke", "#ccc")
+        .style("stroke-width", "2px")
+        .style("stroke-opacity", .4);
+
+    closetutorial.append("text")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + (windowWidth * 0.11) + "," + (windowWidth * 0.032) + ")")
+        .style("font-size", windowWidth * 0.025)
+        .style("font-weight", "700")
+        .style("stroke", "#eee")
+        .style("fill", "#eee")
+        .style("text-anchor", "middle")
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand')
+        .text("Got it, let's go!")
+        .on("click", removeTutorial);
+
+    var closeicon = tutorialscreen.append("g")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(" + (windowWidth * 0.98) + "," + (windowWidth * 0.02) + ")")
+        .attr("class", "got_it")
+        .on("click", removeTutorial);
+
+    closeicon.append("circle")
+        .attr("class", "tutorialitem")
+        .attr("r", 12)
+        .attr("x", 12)
+        .attr("y", 12)
+        .style("fill", "#000")
+        .style("fill-opacity", 0.7)
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand')
+        .style("stroke", "#bbb")
+        .style("stroke-width", "2px")
+        .style("stroke-opacity", 0.9);
+
+    closeicon.append("text")
+        .attr("class", "tutorialitem")
+        .attr("transform", "translate(0,6)")
+        .style("text-anchor", "middle")
+        .style("font-family", "sans-serif")
+        .style("font-size", 16)
+        .style("stroke", "#bbb")
+        .style("fill", "#bbb")
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand')
+        .text("X");
+
+}
+
+function removeTutorial() {
+    d3.selectAll(".tutorialitem")
+        .transition()
+        .duration(500)
+        .attr("transform", "translate(" + (windowWidth * 0.95) + "," + (windowHeight * 0.05) + ")")
+        .attr("width", 0)
+        .attr("height", 0)
+        .attr("opacity", 0)
+        .each("end", function() {
+            d3.selectAll(".tutorialscreen").remove();
+        });
+    var tutorialbutton = d3.select("#headerbuttons").append("svg")
+        .attr("class", "tutorialbutton")
+        .attr("width", windowWidth * 0.5)
+        .attr("height", headerHeight)
+        .append("g")
+        .attr("transform", "translate(" + windowWidth * 0.43 + "," + headerHeight * 0.2 + ")");
+    tutorialbutton.append("rect")
+        .attr("width", windowWidth * 0.05)
+        .attr("height", headerHeight * 0.7)
+        .style("fill", "#666")
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand');
+    tutorialbutton.append("text")
+        .attr("transform", "translate(" + windowWidth * 0.025 + "," + headerHeight * 0.4 + ")")
+        .style("text-anchor", "middle")
+        .style("font-size", headerHeight * 0.3)
+        .style("font-style", "normal")
+        .style("font-weight", "400")
+        .style("stroke", "#ddd")
+        .style("fill", "#ddd")
+        .style('cursor', 'pointer')
+        .style('cursor', 'hand')
+        .text("help");
+    tutorialbutton.on("click", function() {
+        drawTutorial();
+        d3.selectAll(".tutorialbutton").remove();
+    });
+}
+
+function splitLines(txt, maxchars) {
+    var words = txt.split(" ");
+    var output = [];
+    var temp_output = "";
+    var num_words = words.length;
+    for (var w=0; w<num_words; w++) {
+        var add_word = words.shift();
+        if (temp_output.length > 0) {
+            if ((temp_output + ' ' + add_word).length > maxchars) {
+                output.push(temp_output);
+                temp_output = add_word;
+            } else {
+                temp_output += ' ' + add_word;
+            }
+        } else if (add_word.length > maxchars) {
+            output.push(add_word);
+        } else {
+            temp_output = add_word;
+        }
+    }
+    if (temp_output.length > 0) {
+        output.push(temp_output);
+    }
+    return output;
+}
 
 // });  
