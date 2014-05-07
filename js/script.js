@@ -982,7 +982,7 @@ function drawTutorial() {
         .style("font-size", mainHeight * 0.03)
         .style("font-weight", "400");
 
-    var strings = splitLines('This word cloud shows the most frequent subjects (key words) in the subsection of articles that are surrently selected', 30);
+    var strings = splitLines('This word cloud shows the most frequent specific subjects in the subset of articles that are currently selected', 30);
     for (var s=0; s<strings.length; s++) {
         cloudtext.append("tspan")
             .attr("x", rightWidth * 0.5)
@@ -1020,7 +1020,7 @@ function drawTutorial() {
         .style("font-size", mainHeight * 0.03)
         .style("font-weight", "400");
 
-    var strings = splitLines('This collapsable tree shows the polyhierarchy that is used by PLOS to categoriez their papers. It is considered a polyhierarchy because you can reach the same leaf node through several differnt paths. The nodes are sized by the number of articles they contain. When you click on a node the graphs on the right will udate with data pertaining to articles related to the subject.', 40);
+    var strings = splitLines('This collapsible tree shows how PLOS categorizes the subject areas of articles published in their journals. When you click on a node, the graphs on the right will be updated with data pertaining to articles related to that subject. The nodes are sized by the number of articles they contain. The tree is a polyhierarchy, because you may reach the same node through several different paths.', 35);
     for (var s=0; s<strings.length; s++) {
         treetext.append("tspan")
             .attr("x", rightWidth * 0.5)
