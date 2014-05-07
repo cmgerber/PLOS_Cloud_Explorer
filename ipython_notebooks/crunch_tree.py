@@ -80,17 +80,17 @@ def tree_from_spreadsheet(f, df, verbose=False):
                 elif tier == 4:
                     pt_list[-1]['children'][-1]['children'][-1]['children'].append(node)
                 elif tier == 5:
-                    pt_list[-1]['children'][-1]['children'][-1]['children'].append(node)
-                elif tier == 6:
                     pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
-                elif tier == 7:
+                elif tier == 6:
                     pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
-                elif tier == 8:
+                elif tier == 7:
                     pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
-                elif tier == 9:
+                elif tier == 8:
                     pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
-                elif tier == 10:
+                elif tier == 9:
                     pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
+                elif tier == 10:
+                    pt_list[-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'][-1]['children'].append(node)
 
                 # Go to next row after finding a term. There is only one term listed per row.
                 break
@@ -115,6 +115,8 @@ def main():
     plos_tree = tree_from_spreadsheet(plosthes_full_file, df, verbose=True)
 
     # Export tree structure as JSON
+    # Note: this script won't overwrite the JSON file used by
+    # the D3 tree visualization code (plos_tree.json).
     with open('../data/plos_hierarchy_full.json', 'wb') as f:
         json.dump(plos_tree, f)
 
