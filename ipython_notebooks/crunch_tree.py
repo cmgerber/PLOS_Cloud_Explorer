@@ -72,7 +72,6 @@ def tree_from_spreadsheet(f, df, verbose=False):
                 # This part is completely ridiculous. But it seems to work.
                 if tier == 1:
                     pt_list.append(node)
-                    pt_list.append
                 elif tier == 2:
                     pt_list[-1]['children'].append(node)
                 elif tier == 3:
