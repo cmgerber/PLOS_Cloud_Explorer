@@ -944,7 +944,8 @@ function drawTutorial() {
         .style("font-size", mainHeight * 0.03)
         .style("font-weight", "400");
 
-    var strings = ["You can use this chart to change the", "time range you want to view." ];
+    var strings = ["You can use this chart to change",
+                   "the time range you want to view." ];
     for (var s=0; s<strings.length; s++) {
         findertext.append("tspan")
             .attr("x", rightWidth * 0.5)
@@ -982,7 +983,7 @@ function drawTutorial() {
         .style("font-size", mainHeight * 0.03)
         .style("font-weight", "400");
 
-    var strings = splitLines('This word cloud shows the most frequent specific subjects in the subset of articles that are currently selected', 30);
+    var strings = splitLines('This word cloud shows the most frequent specific subjects in the subset of articles that are currently selected.', 30);
     for (var s=0; s<strings.length; s++) {
         cloudtext.append("tspan")
             .attr("x", rightWidth * 0.5)
@@ -1020,7 +1021,7 @@ function drawTutorial() {
         .style("font-size", mainHeight * 0.03)
         .style("font-weight", "400");
 
-    var strings = splitLines('This collapsible tree shows how PLOS categorizes the subject areas of articles published in their journals. When you click on a node, the graphs on the right will be updated with data pertaining to articles related to that subject. The nodes are sized by the number of articles they contain. The tree is a polyhierarchy, because you may reach the same node through several different paths.', 35);
+    var strings = splitLines('This collapsible tree shows how PLOS categorizes the subject areas of articles published in their journals. The nodes are sized by the number of articles they contain. When you click on a node, you are selecting all articles within that subject area. The graphs on the right will show information about those articles.', 35); // 'The tree is a polyhierarchy, because you may reach the same node through several different paths.'
     for (var s=0; s<strings.length; s++) {
         treetext.append("tspan")
             .attr("x", rightWidth * 0.5)
