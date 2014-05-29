@@ -1,7 +1,7 @@
 # PLOS Cloud Explorer
 
 ## Problem Statement
-The open access (OA) publishing movement promises to enrich the public domain with knowledge and scholarship previously confined to restricted-access journals. Despite the major potential benefits of OA, and of the internet in general, to the public understanding of science, academic journals are still largely inaccessible on a cultural level.
+The open access (OA) publishing movement promises to enrich the public domain with knowledge and scholarship previously confined to restricted-access journals. Despite the major potential benefits of OA to the public understanding of science, academic journals are still largely inaccessible on a cultural level.
 Here we focus on the challenge of getting a summary-level picture of a particular area of research. Our goal is to create an experience that allows both researchers and curious members of the general public to explore research trends and interactions between research topics. We are not aware of any current interactive tool that facilitates such interactions.
 
 ## Data
@@ -105,7 +105,7 @@ You can reproduce our work with the following steps.
 
 1. Clone our [Git repository](https://github.com/cmgerber/PLOS_Cloud_Explorer).
 2. To run the web app, execute `python -m SimpleHTTPServer` in a shell from the root directory of the repository, and visit [http://localhost:8000/](http://localhost:8000/) in your browser. Boom!
-3. If you want to reproduce our data collection and analysis, first get a [PLOS API Key](http://api.plos.org/) and make a file called `ipython_notebooks/settings.py` which contains the statement `PLOS_KEY = u'your_key`. (Replace `your_key` with your key.)
+3. If you want to reproduce our data collection and analysis, first get a [PLOS API Key](http://api.plos.org/) and make a file called `ipython_notebooks/settings.py` which contains the statement `PLOS_KEY = u'your_key'`. (Replace `your_key` with your key.)
 4. Make sure you have all the packages listed in `requirements.txt`.
 5. Run the Python code in the notebooks linked above, under *What's behind the scenes*. Note that this will take many hours due to the volume of data.
     * You'll need to generate an article data set using the code for making API calls.
