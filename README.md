@@ -94,7 +94,7 @@ For the selected time span and subject area, the dashboard displays:
 
 ## Results
 
-> [Try the web app!](http://groups.ischool.berkeley.edu/ploscloudexplorer)
+> [Try the web app!](http://groups.ischool.berkeley.edu/ploscloudexplorer) (seems to work best on Chrome)
 
 Our visualization reveals interesting things about the research articles in PLOS journals. By selecting a subject area node, you can see from the word cloud and the histogram that research areas are highly interconnected. You can observe and explore trends in the number of articles over time for a given set of subjects (using the time series graphs), and also trends in the associations among subjects (using the histogram and word cloud).
 
