@@ -24,7 +24,7 @@ h4												      {}
 h5												      {}
 h6												      {}
 
-p												        {margin: 40px auto; position: relative; font-size:1em; font-weight:normal; margin:20 20 16px 0;}
+p												        {/*margin: 40px auto;*/ position: relative; font-size:1em; font-weight:normal; margin:20 20 16px 0;}
 span												    {}
 hr													    {}
 label												    {}
@@ -54,6 +54,12 @@ textarea											  {}
 
 #headerbuttons {
   float: right;
+}
+
+#about-link {
+  color: #dddddd;
+  float: right;
+  margin-top: 0.6em;
 }
 
 /* collapsable tree */
