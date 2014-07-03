@@ -160,4 +160,4 @@ A copy of the GNU Affero General Public License is included in this repo.
 
 ### Data
 
-All PLOS content (article data, subject area thesaurus) is licensed under a [Creative Commons Attribution (CC BY) license](http://creativecommons.org/licenses/by/4.0/).
+All PLOS content (article data, subject area thesaurus) is licensed under the [Creative Commons Attribution (CC BY) license](http://creativecommons.org/licenses/by/4.0/).
