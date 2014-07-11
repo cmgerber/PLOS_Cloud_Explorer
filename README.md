@@ -108,9 +108,9 @@ You can reproduce our work with the following steps.
 3. If you want to reproduce our data collection and analysis, first get a [PLOS API Key](http://api.plos.org/) and make a file called `ipython_notebooks/settings.py` which contains the statement `PLOS_KEY = u'your_key'`. (Replace `your_key` with your key.)
 4. Make sure you have all the packages listed in `requirements.txt`.
 5. Run the Python code in the notebooks linked above, under *What's behind the scenes*. Note that this will take many hours due to the volume of data.
+    * You may want to download the [latest version of the PLOS Thesaurus spreadsheet](https://github.com/PLOS/plos-thesaurus), in order to generate an up-to-date subject area tree. PLOS periodically [updates](http://blogs.plos.org/tech/thesaurus-evolution/) the Thesaurus.
     * You'll need to generate an article data set using the code for making API calls.
     * Then you'll need to regenerate the JSON objects.
-    * PLOS periodically [updates their Thesaurus](http://blogs.plos.org/tech/thesaurus-evolution/). You may ask them for a new copy (in spreadsheet format), in order to generate an up-to-date subject area tree.
 
 
 ### Future Plans
