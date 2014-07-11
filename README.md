@@ -5,7 +5,7 @@ The open access (OA) publishing movement promises to enrich the public domain wi
 Here we focus on the challenge of getting a summary-level picture of a particular area of research. Our goal is to create an experience that allows both researchers and curious members of the general public to explore research trends and interactions between research topics. We are not aware of any current interactive tool that facilitates such interactions.
 
 ## Data
-Here we used open-access content published in the [Public Library of Science (PLOS)](http://www.plos.org/) journals. The [PLOS Search API](http://api.plos.org/), which provides access to full article data and metadata, allowed us to extract article titles, abstracts, publication dates, and subject areas (keywords) that are part of the [PLOS Thesaurus](http://www.plosone.org/taxonomy).
+Here we used open-access content published in the [Public Library of Science (PLOS)](http://www.plos.org/) journals. The [PLOS Search API](http://api.plos.org/), which provides access to full article data and metadata, allowed us to extract article titles, abstracts, publication dates, and subject areas (keywords) that are part of the [PLOS Thesaurus](https://github.com/PLOS/plos-thesaurus).
 
 
 ## Our Process
