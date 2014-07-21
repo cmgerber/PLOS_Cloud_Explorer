@@ -7,7 +7,7 @@ import xlrd
 from collections import defaultdict
 
 # Just in case we need to regenerate the subject hierarchy.
-
+# Don't forget to update the filename of the thesaurus spreadsheet in main().
 
 def get_subj_top(subjects):
     subj_top = set()
@@ -108,7 +108,8 @@ def main():
     df.drop(['author', 'title_display', 'journal', 'abstract', 'publication_date', 'score'], axis=1, inplace=True)
     df.set_index('id', inplace=True)
 
-    plosthes_full_file = '../data/plosthes.2014-1.full.xlsx'
+    # Update this filename if you use a newer version!
+    plosthes_full_file = '../data/plosthes.2014-2.full.xlsx'
 
     # Generate tree structure
     plos_tree = tree_from_spreadsheet(plosthes_full_file, df, verbose=True)

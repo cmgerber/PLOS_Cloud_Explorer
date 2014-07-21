@@ -1,11 +1,10 @@
 # PLOS Cloud Explorer
 
 ## Problem Statement
-The open access (OA) publishing movement promises to enrich the public domain with knowledge and scholarship previously confined to restricted-access journals. Despite the major potential benefits of OA to the public understanding of science, academic journals are still largely inaccessible on a cultural level.
-Here we focus on the challenge of getting a summary-level picture of a particular area of research. Our goal is to create an experience that allows both researchers and curious members of the general public to explore research trends and interactions between research topics. We are not aware of any current interactive tool that facilitates such interactions.
+The open access (OA) publishing movement promises to enrich the public domain with knowledge and scholarship previously confined to restricted-access journals. Despite the major potential benefits of OA to the public understanding of science, academic journals are still largely inaccessible on a cultural level. Here we focus on the challenge of getting a summary-level picture of a particular area of research. Our goal is to create an experience that allows both researchers and curious members of the general public to explore research trends and interactions between research topics. We are not aware of any current interactive tool that facilitates such interactions.
 
 ## Data
-Here we used open-access content published in the [Public Library of Science (PLOS)](http://www.plos.org/) journals. The [PLOS Search API](http://api.plos.org/), which provides access to full article data and metadata, allowed us to extract article titles, abstracts, publication dates, and subject areas (keywords) that are part of the [PLOS Thesaurus](https://github.com/PLOS/plos-thesaurus).
+We used open-access content published in the [Public Library of Science (PLOS)](http://www.plos.org/) journals. The [PLOS Search API](http://api.plos.org/), which provides access to full article data and metadata, allowed us to extract article titles, abstracts, publication dates, and subject areas (keywords) that are part of the [PLOS Thesaurus](https://github.com/PLOS/plos-thesaurus).
 
 
 ## Our Process
@@ -30,11 +29,11 @@ The tree and word cloud visualizations can be interactively filtered by restrict
 
 ### We downloaded bulk data from PLOS API
 
-In order to collect a full dataset from the PLOS Search API, we used a Python script to download data for 115489 acticles -- all articles ever published in PLOS journals and accessible through the API -- while respecting the limits on the frequency and number of API calls. After some trial and error, a successful bulk download took only three hours.
+In order to collect a full dataset from the PLOS Search API, we used a Python script to download data for ~120 thousand acticles -- all articles ever published in PLOS journals and accessible through the API -- while respecting the limits on the frequency and number of API calls. After some trial and error, a successful bulk download took only three hours.
 
 > notebook: [Batch_data_collection_full.ipynb](http://nbviewer.ipython.org/github/cmgerber/PLOS_Cloud_Explorer/blob/master/ipython_notebooks/Batch_data_collection_full.ipynb)
 
-The resulting dataset contains the following for each article:
+The resulting dataset (last updated: 2014-07-21) contains the following for each article:
 * article DOI
 * title
 * authors
@@ -60,14 +59,14 @@ These data describe article subject areas in a very useful way. The "subject are
  u'/Biology and life sciences/Organisms/Animals/Vertebrates']
 ```
 
-The entire PLOS subject area polyhierarchy was kindly provided to us as a spreadsheet with thousands of rows, one node per row.
+The entire PLOS subject area polyhierarchy was kindly provided to us as a spreadsheet with ~17 thousand rows, one node per row. It is now also available on [GitHub](https://github.com/PLOS/plos-thesaurus).
 
 
 ### We transformed the data into two JSON objects
 
 #### Article data
 
-We transformed the article data (a 400 MB pickled DataFrame) into a JSON object containing a list of articles (indexed by DOI) and the data about them. Due to the large file size, we excluded several pieces of information that we weren't immediately using in our data visualization (though we could add these back later). Currently, each article in the JSON object has the publication date (truncated to year only) and the list of subject area paths that were provided by the API. In addition, for each article, we calculated the set of top-level (root) and lowest-level (leaf) terms that appear in its subject area field. We explain how these are used below.
+We transformed the article data (a ~400 MB pickled DataFrame) into a JSON object containing a list of articles (indexed by DOI) and the data about them. Due to the large file size, we excluded several pieces of information that we weren't immediately using in our data visualization (though we could add these back later). Currently, each article in the JSON object has the publication date (truncated to year only) and the list of subject area paths that were provided by the API. In addition, for each article, we calculated the set of top-level (root) and lowest-level (leaf) terms that appear in its subject area field. We explain how these are used below.
 
 > notebook: [plos_data_transform_full.ipynb](http://nbviewer.ipython.org/github/cmgerber/PLOS_Cloud_Explorer/blob/master/ipython_notebooks/plos_data_transform_full.ipynb)
 
