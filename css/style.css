@@ -52,6 +52,16 @@ textarea											  {}
   float: left;
 }
 
+#beta {
+  float: left;
+  color: #beabda;
+  font-size: 0.5em;
+  font-style: italic;
+  font-weight: normal;
+  vertical-align: top;
+  margin: 2px 0 0 6px;
+}
+
 #headerbuttons {
   float: right;
 }
@@ -179,4 +189,4 @@ body                            {}
 
 strong											    {font-weight:bold;}
 em                              {font-style:italic;}
-.cb                             {clear:both;}          
+.cb                             {clear:both;}
